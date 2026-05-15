@@ -11,7 +11,7 @@ This project uses XcodeGen to generate the `.xcodeproj` to avoid git merge confl
 1. Clone the repository.
 2. Run XcodeGen:
    ```bash
-   xccodegen generate
+   xcodegen generate
    ```
 3. Open `Farnsworth.xcodeproj`.
 4. Select the **Farnsworth** scheme and an iOS 17 Simulator.
