@@ -155,6 +155,7 @@
 			buildConfigurationList = 9A200309C7B16116E0EAEE7F /* Build configuration list for PBXNativeTarget "Farnsworth" */;
 			buildPhases = (
 				CA590E2455102B2173DF18FD /* Sources */,
+				80CBDA48700085DF14C63E91 /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -197,6 +198,27 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		80CBDA48700085DF14C63E91 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1F0CADFABA0EE547025EF7CC /* Sources */ = {

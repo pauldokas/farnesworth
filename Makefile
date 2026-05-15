@@ -1,4 +1,4 @@
-.PHONY: generate build test clean
+.PHONY: generate build test clean lint
 
 SIMULATOR ?= "platform=iOS Simulator,name=iPhone 17"
 
@@ -10,6 +10,9 @@ build: generate
 
 test: generate
 	xcodebuild test -scheme Farnsworth -destination $(SIMULATOR)
+
+lint:
+	swiftlint lint
 
 clean:
 	rm -rf Farnsworth.xcodeproj

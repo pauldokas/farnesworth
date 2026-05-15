@@ -1,0 +1,16 @@
+disabled_rules:
+  - trailing_whitespace
+  - line_length
+  
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+
+excluded:
+  - .build
+  - Farnsworth.xcodeproj
+  - FarnsworthTests
+  
+# Customize some rules
+force_cast: warning
+force_try: warning

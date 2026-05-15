@@ -26,7 +26,7 @@ struct MorseInputTextField: View {
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(borderColor, lineWidth: 4)
             )
-            .onChange(of: isCorrect) { oldValue, newValue in
+            .onChange(of: isCorrect) { _, newValue in
                 if let state = newValue {
                     let announcement = state ? "Correct" : "Incorrect"
                     AccessibilityNotification.Announcement(announcement).post()
@@ -55,7 +55,7 @@ struct MorseInputTextField: View {
 #Preview {
     struct PreviewWrapper: View {
         @State private var text = ""
-        @State private var state: Bool? = nil
+        @State private var state: Bool?
         
         var body: some View {
             VStack(spacing: 40) {

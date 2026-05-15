@@ -81,7 +81,7 @@ public final class ToneGenerator {
     public var renderBlock: AVAudioSourceNodeRenderBlock {
         let ctxPtr = self.contextPointer
         
-        return { (isSilence, timestamp, frameCount, outputData) -> OSStatus in
+        return { (_, _, frameCount, outputData) -> OSStatus in
             let abl = UnsafeMutableAudioBufferListPointer(outputData)
             guard let buffer = abl[0].mData?.assumingMemoryBound(to: Float.self) else {
                 return noErr
