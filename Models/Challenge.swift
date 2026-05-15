@@ -5,7 +5,7 @@ public struct Challenge: Identifiable, Hashable {
     public let text: String
     public let morseCode: String
     public let answer: String
-    
+
     public init(text: String, morseCode: String, answer: String? = nil) {
         self.id = UUID()
         self.text = text

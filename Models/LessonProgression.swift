@@ -7,7 +7,7 @@ public struct LessonProgression {
         "G", "5", "/", "Q", "9", "Z", "H", "3", "8", "B",
         "?", "4", "2", "7", "C", "1", "D", "6", "X"
     ]
-    
+
     private static let morseMapping: [Character: String] = [
         "K": "-.-", "M": "--", "R": ".-.", "S": "...", "U": "..-", "A": ".-",
         "P": ".--.", "T": "-", "L": ".-..", "O": "---", "W": ".--", "I": "..",
@@ -17,17 +17,17 @@ public struct LessonProgression {
         "?": "..--..", "4": "....-", "2": "..---", "7": "--...", "C": "-.-.", "1": ".----",
         "D": "-..", "6": "-....", "X": "-..-"
     ]
-    
+
     public var unlockedCount: Int
-    
+
     public init(unlockedCount: Int = 2) {
         self.unlockedCount = max(2, min(unlockedCount, LessonProgression.kochSequence.count))
     }
-    
+
     public var unlockedCharacters: [Character] {
         Array(LessonProgression.kochSequence.prefix(unlockedCount))
     }
-    
+
     public func nextChallenge() -> Challenge {
         let character = unlockedCharacters.randomElement() ?? "K"
         let morse = LessonProgression.morseMapping[character] ?? ""

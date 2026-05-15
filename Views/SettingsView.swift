@@ -3,12 +3,12 @@ import SwiftUI
 public struct SettingsView: View {
     @Bindable var timingModel: MorseTimingModel
     @Bindable var audioEngine: MorseAudioEngine
-    
+
     public init(timingModel: MorseTimingModel, audioEngine: MorseAudioEngine) {
         self.timingModel = timingModel
         self.audioEngine = audioEngine
     }
-    
+
     public var body: some View {
         Form {
             Section {
@@ -16,7 +16,7 @@ public struct SettingsView: View {
             } header: {
                 Text("Feedback")
             }
-            
+
             Section {
                 VStack(alignment: .leading) {
                     Text("Character Speed: \(Int(timingModel.characterSpeed)) WPM")
@@ -31,7 +31,7 @@ public struct SettingsView: View {
                     .accessibilityValue("\(Int(timingModel.characterSpeed)) words per minute")
                 }
                 .padding(.vertical, 4)
-                
+
                 VStack(alignment: .leading) {
                     Text("Effective Speed: \(Int(timingModel.effectiveSpeed)) WPM")
                         .font(.headline)

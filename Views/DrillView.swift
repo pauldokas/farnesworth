@@ -3,13 +3,13 @@ import SwiftUI
 struct DrillView: View {
     @Environment(MorseTimingModel.self) private var timingModel
     @Environment(MorseAudioEngine.self) private var audioEngine
-    
+
     @State private var session: DrillSession?
-    
+
     var body: some View {
         VStack(spacing: 40) {
             Spacer()
-            
+
             if session?.currentState == .idle || session == nil {
                 Button(action: {
                     if session == nil {
@@ -39,7 +39,7 @@ struct DrillView: View {
                         .foregroundColor(.secondary)
                         .accessibilityLabel(statusAccessibilityLabel(for: session))
                         .accessibilityAddTraits(.updatesFrequently)
-                    
+
                     MorseInputTextField(
                         text: Bindable(session).inputBuffer,
                         isCorrect: session.isCorrect
@@ -48,12 +48,12 @@ struct DrillView: View {
                 }
                 .padding(.horizontal, 24)
             }
-            
+
             Spacer()
         }
         .animation(.easeInOut, value: session?.currentState)
     }
-    
+
     private func statusText(for session: DrillSession) -> String {
         switch session.currentState {
         case .idle:
@@ -69,7 +69,7 @@ struct DrillView: View {
             return "..."
         }
     }
-    
+
     private func statusAccessibilityLabel(for session: DrillSession) -> String {
         switch session.currentState {
         case .idle:

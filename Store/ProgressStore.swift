@@ -5,7 +5,7 @@ import Observation
 @Model
 final class UserProgress {
     var unlockedCount: Int
-    
+
     init(unlockedCount: Int = 2) {
         self.unlockedCount = unlockedCount
     }
@@ -14,14 +14,14 @@ final class UserProgress {
 @Observable
 final class ProgressStore {
     private var modelContext: ModelContext
-    
+
     var currentProgress: UserProgress?
-    
+
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         fetchProgress()
     }
-    
+
     func fetchProgress() {
         let descriptor = FetchDescriptor<UserProgress>()
         do {
@@ -37,7 +37,7 @@ final class ProgressStore {
             print("Failed to fetch progress: \(error)")
         }
     }
-    
+
     func updateUnlockedCount(_ count: Int) {
         if let progress = currentProgress {
             progress.unlockedCount = count

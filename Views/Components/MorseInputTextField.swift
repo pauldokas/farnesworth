@@ -3,9 +3,9 @@ import SwiftUI
 struct MorseInputTextField: View {
     @Binding var text: String
     var isCorrect: Bool?
-    
+
     @FocusState private var isFocused: Bool
-    
+
     var body: some View {
         TextField("Type here", text: $text)
             .font(.system(size: 80, weight: .bold, design: .monospaced))
@@ -36,14 +36,14 @@ struct MorseInputTextField: View {
                 isFocused = true
             }
     }
-    
+
     private var backgroundColor: Color {
         guard let state = isCorrect else {
             return Color.secondary.opacity(0.1)
         }
         return state ? Color.green.opacity(0.1) : Color.red.opacity(0.1)
     }
-    
+
     private var borderColor: Color {
         guard let state = isCorrect else {
             return Color.clear
@@ -56,12 +56,12 @@ struct MorseInputTextField: View {
     struct PreviewWrapper: View {
         @State private var text = ""
         @State private var state: Bool?
-        
+
         var body: some View {
             VStack(spacing: 40) {
                 MorseInputTextField(text: $text, isCorrect: state)
                     .padding()
-                
+
                 HStack(spacing: 20) {
                     Button("Neutral") { state = nil }
                     Button("Correct") { state = true }
@@ -71,6 +71,6 @@ struct MorseInputTextField: View {
             }
         }
     }
-    
+
     return PreviewWrapper()
 }

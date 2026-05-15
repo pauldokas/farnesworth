@@ -1,7 +1,7 @@
 # Work Plan: Morse Code Farnsworth App
 
 ## 1. Objective & Scope
-**Goal**: Build a minimal, simple iOS application (Swift 5.9+, SwiftUI) that teaches Morse code using the Farnsworth method and structured lessons. 
+**Goal**: Build a minimal, simple iOS application (Swift 5.9+, SwiftUI) that teaches Morse code using the Farnsworth method and structured lessons.
 **Input**: Keyboard typing (auto-correct disabled).
 **Feedback**: Minimalist, audio-centric.
 

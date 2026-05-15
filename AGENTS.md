@@ -33,7 +33,7 @@ Follow these rules for all code you write:
 @Observable
 class MorsePlayerModel {
     var isPlaying = false
-    
+
     func playSequence(_ sequence: String) async {
         isPlaying = true
         // await precise audio playback logic
