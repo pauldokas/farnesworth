@@ -2,34 +2,58 @@ import Foundation
 import Observation
 
 @Observable
-final class DrillSession {
-    enum DrillState {
+public final class DrillSession {
+    public enum DrillState {
         case idle
         case playingAudio
         case awaitingInput
         case feedback
     }
     
-    var currentState: DrillState = .idle
-    var currentChallenge: Challenge?
-    var inputBuffer: String = ""
-    var isCorrect: Bool?
+    public var currentState: DrillState = .idle
+    public var currentChallenge: Challenge?
+    
+    public var inputBuffer: String = "" {
+        didSet {
+            if currentState == .feedback || currentState == .idle {
+                if !inputBuffer.isEmpty {
+                    inputBuffer = ""
+                }
+                return
+            }
+            
+            let sanitized = inputBuffer.uppercased().filter { $0.isASCII }
+            if inputBuffer != sanitized {
+                inputBuffer = sanitized
+            }
+            
+            if currentState == .awaitingInput {
+                validateInput()
+            }
+        }
+    }
+    
+    public var isCorrect: Bool?
     
     private var lessonProgression: LessonProgression
     private let timingModel: MorseTimingModel
     private let audioEngine: MorseAudioEngine
     
-    private var gracePeriodCorrect = false
     private var playbackTask: Task<Void, Never>?
     private var feedbackTask: Task<Void, Never>?
     
-    init(lessonProgression: LessonProgression, timingModel: MorseTimingModel, audioEngine: MorseAudioEngine) {
+    public init(lessonProgression: LessonProgression, timingModel: MorseTimingModel, audioEngine: MorseAudioEngine) {
         self.lessonProgression = lessonProgression
         self.timingModel = timingModel
         self.audioEngine = audioEngine
     }
     
-    func startNextChallenge() {
+    deinit {
+        playbackTask?.cancel()
+        feedbackTask?.cancel()
+    }
+    
+    public func startNextChallenge() {
         feedbackTask?.cancel()
         playbackTask?.cancel()
         
@@ -37,7 +61,6 @@ final class DrillSession {
         currentChallenge = challenge
         inputBuffer = ""
         isCorrect = nil
-        gracePeriodCorrect = false
         currentState = .playingAudio
         
         let sequence = convertMorseToSequence(challenge.morseCode)
@@ -51,12 +74,12 @@ final class DrillSession {
             if Task.isCancelled { return }
             
             await MainActor.run {
-                if gracePeriodCorrect {
+                if inputBuffer == currentChallenge?.text {
                     isCorrect = true
                     transitionToFeedback()
                 } else {
                     currentState = .awaitingInput
-                    if !inputBuffer.isEmpty {
+                    if inputBuffer.count >= (currentChallenge?.text.count ?? Int.max) {
                         validateInput()
                     }
                 }
@@ -64,17 +87,8 @@ final class DrillSession {
         }
     }
     
-    func submitInput(_ char: String) {
-        let upperChar = char.uppercased()
-        inputBuffer += upperChar
-        
-        if currentState == .playingAudio {
-            if inputBuffer == currentChallenge?.text {
-                gracePeriodCorrect = true
-            }
-        } else if currentState == .awaitingInput {
-            validateInput()
-        }
+    public func submitInput(_ char: String) {
+        inputBuffer += char
     }
     
     private func validateInput() {
@@ -105,17 +119,32 @@ final class DrillSession {
     
     private func convertMorseToSequence(_ morse: String) -> [(isTone: Bool, duration: Double)] {
         var sequence: [(isTone: Bool, duration: Double)] = []
-        let elements = Array(morse)
+        let words = morse.components(separatedBy: "   ")
         
-        for (index, element) in elements.enumerated() {
-            if element == "." {
-                sequence.append((isTone: true, duration: timingModel.dotUnit))
-            } else if element == "-" {
-                sequence.append((isTone: true, duration: timingModel.dashDuration))
+        for (wordIndex, word) in words.enumerated() {
+            let chars = word.components(separatedBy: " ")
+            
+            for (charIndex, charStr) in chars.enumerated() {
+                let elements = Array(charStr)
+                for (elemIndex, element) in elements.enumerated() {
+                    if element == "." {
+                        sequence.append((isTone: true, duration: timingModel.dotUnit))
+                    } else if element == "-" {
+                        sequence.append((isTone: true, duration: timingModel.dashDuration))
+                    }
+                    
+                    if elemIndex < elements.count - 1 {
+                        sequence.append((isTone: false, duration: timingModel.intraCharacterSpace))
+                    }
+                }
+                
+                if charIndex < chars.count - 1 {
+                    sequence.append((isTone: false, duration: timingModel.interCharacterSpace))
+                }
             }
             
-            if index < elements.count - 1 {
-                sequence.append((isTone: false, duration: timingModel.intraCharacterSpace))
+            if wordIndex < words.count - 1 {
+                sequence.append((isTone: false, duration: timingModel.interWordSpace))
             }
         }
         

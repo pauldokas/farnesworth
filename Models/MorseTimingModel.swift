@@ -5,7 +5,10 @@ import Observation
 public class MorseTimingModel {
     public var characterSpeed: Double {
         didSet {
-            if characterSpeed < effectiveSpeed {
+            if characterSpeed.isNaN { characterSpeed = 5.0 }
+            if characterSpeed < 5.0 { characterSpeed = 5.0 }
+            if characterSpeed > 100.0 { characterSpeed = 100.0 }
+            if effectiveSpeed > characterSpeed {
                 effectiveSpeed = characterSpeed
             }
         }
@@ -13,6 +16,9 @@ public class MorseTimingModel {
     
     public var effectiveSpeed: Double {
         didSet {
+            if effectiveSpeed.isNaN { effectiveSpeed = 5.0 }
+            if effectiveSpeed < 5.0 { effectiveSpeed = 5.0 }
+            if effectiveSpeed > 100.0 { effectiveSpeed = 100.0 }
             if effectiveSpeed > characterSpeed {
                 characterSpeed = effectiveSpeed
             }
@@ -20,8 +26,15 @@ public class MorseTimingModel {
     }
     
     public init(characterSpeed: Double = 20.0, effectiveSpeed: Double = 15.0) {
-        let wc = max(characterSpeed, effectiveSpeed)
-        let we = min(characterSpeed, effectiveSpeed)
+        var wc = characterSpeed.isNaN ? 20.0 : characterSpeed
+        var we = effectiveSpeed.isNaN ? 15.0 : effectiveSpeed
+        
+        wc = min(max(wc, 5.0), 100.0)
+        we = min(max(we, 5.0), 100.0)
+        
+        if we > wc {
+            wc = we
+        }
         
         self.characterSpeed = wc
         self.effectiveSpeed = we

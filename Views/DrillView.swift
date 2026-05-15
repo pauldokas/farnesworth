@@ -1,19 +1,25 @@
 import SwiftUI
 
 struct DrillView: View {
-    @State private var session = DrillSession(
-        lessonProgression: LessonProgression(),
-        timingModel: MorseTimingModel(),
-        audioEngine: MorseAudioEngine()
-    )
+    @Environment(MorseTimingModel.self) private var timingModel
+    @Environment(MorseAudioEngine.self) private var audioEngine
+    
+    @State private var session: DrillSession?
     
     var body: some View {
         VStack(spacing: 40) {
             Spacer()
             
-            if session.currentState == .idle {
+            if session?.currentState == .idle || session == nil {
                 Button(action: {
-                    session.startNextChallenge()
+                    if session == nil {
+                        session = DrillSession(
+                            lessonProgression: LessonProgression(),
+                            timingModel: timingModel,
+                            audioEngine: audioEngine
+                        )
+                    }
+                    session?.startNextChallenge()
                 }) {
                     Text("Start Drill")
                         .font(.title2)
@@ -25,29 +31,17 @@ struct DrillView: View {
                         .cornerRadius(16)
                 }
                 .padding(.horizontal, 32)
-            } else {
+            } else if let session = session {
                 VStack(spacing: 24) {
-                    Text(statusText)
+                    Text(statusText(for: session))
                         .font(.title3)
                         .fontWeight(.medium)
                         .foregroundColor(.secondary)
-                        .accessibilityLabel(statusAccessibilityLabel)
+                        .accessibilityLabel(statusAccessibilityLabel(for: session))
                         .accessibilityAddTraits(.updatesFrequently)
                     
                     MorseInputTextField(
-                        text: Binding(
-                            get: { session.inputBuffer },
-                            set: { newValue in
-                                if newValue.count > session.inputBuffer.count {
-                                    let newChars = newValue.dropFirst(session.inputBuffer.count)
-                                    for char in newChars {
-                                        session.submitInput(String(char))
-                                    }
-                                } else {
-                                    session.inputBuffer = newValue.uppercased()
-                                }
-                            }
-                        ),
+                        text: Bindable(session).inputBuffer,
                         isCorrect: session.isCorrect
                     )
                     .disabled(session.currentState == .feedback)
@@ -57,10 +51,10 @@ struct DrillView: View {
             
             Spacer()
         }
-        .animation(.easeInOut, value: session.currentState)
+        .animation(.easeInOut, value: session?.currentState)
     }
     
-    private var statusText: String {
+    private func statusText(for session: DrillSession) -> String {
         switch session.currentState {
         case .idle:
             return "Ready"
@@ -76,7 +70,7 @@ struct DrillView: View {
         }
     }
     
-    private var statusAccessibilityLabel: String {
+    private func statusAccessibilityLabel(for session: DrillSession) -> String {
         switch session.currentState {
         case .idle:
             return "Ready to start"
@@ -95,4 +89,6 @@ struct DrillView: View {
 
 #Preview {
     DrillView()
+        .environment(MorseTimingModel())
+        .environment(MorseAudioEngine())
 }

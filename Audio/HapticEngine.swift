@@ -34,7 +34,7 @@ public final class HapticEngine {
     
     /// Plays a sequence of haptic pulses.
     /// - Parameter sequence: A list of (isTone, duration) pairs.
-    public func play(sequence: [(isTone: Bool, duration: Double)]) {
+    public func play(sequence: [(isTone: Bool, duration: Double)], delay: TimeInterval = 0) {
         guard isEnabled, let engine = engine else { return }
         
         var events: [CHHapticEvent] = []
@@ -59,11 +59,14 @@ public final class HapticEngine {
         do {
             let pattern = try CHHapticPattern(events: events, parameters: [])
             let player = try engine.makePlayer(with: pattern)
-            try player.start(atTime: CHHapticTimeImmediate)
+            try player.start(atTime: CHHapticTimeImmediate + delay)
         } catch {
             print("Failed to play haptic pattern: \(error)")
         }
     }
     
-    public func stop() {}
+    public func stop() {
+        engine?.stop(completionHandler: nil)
+        try? engine?.start()
+    }
 }

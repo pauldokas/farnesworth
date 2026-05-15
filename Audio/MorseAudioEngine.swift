@@ -17,6 +17,14 @@ public final class MorseAudioEngine {
         set { hapticEngine.isEnabled = newValue }
     }
     
+    private var notificationObservers: [Any] = []
+    
+    deinit {
+        for observer in notificationObservers {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
     public init() {
 #if os(iOS)
         let sampleRate = AVAudioSession.sharedInstance().sampleRate > 0 
@@ -45,31 +53,34 @@ public final class MorseAudioEngine {
     
     private func setupNotifications() {
 #if os(iOS)
-        NotificationCenter.default.addObserver(
+        let interruptionObserver = NotificationCenter.default.addObserver(
             forName: AVAudioSession.interruptionNotification,
             object: AVAudioSession.sharedInstance(),
             queue: .main
         ) { [weak self] notification in
             self?.handleInterruption(notification: notification)
         }
+        notificationObservers.append(interruptionObserver)
         
-        NotificationCenter.default.addObserver(
+        let routeChangeObserver = NotificationCenter.default.addObserver(
             forName: AVAudioSession.routeChangeNotification,
             object: AVAudioSession.sharedInstance(),
             queue: .main
         ) { [weak self] notification in
             self?.handleRouteChange(notification: notification)
         }
+        notificationObservers.append(routeChangeObserver)
 #endif
     }
     
     public func start() throws {
 #if os(iOS)
         let session = AVAudioSession.sharedInstance()
-        try session.setCategory(.playback, mode: .default, options: [])
+        try session.setCategory(.playback, mode: .default, options: [.mixWithOthers, .duckOthers])
         try session.setActive(true, options: [])
 #endif
         
+        engine.prepare()
         try engine.start()
         isRunning = true
     }
@@ -89,10 +100,22 @@ public final class MorseAudioEngine {
     /// - Parameter sequence: A list of (isTone, duration) pairs.
     public func play(sequence: [(isTone: Bool, duration: Double)]) {
         if !isRunning {
-            try? start()
+            do {
+                try start()
+            } catch {
+                return
+            }
         }
+        
+        var latency: TimeInterval = 0.0
+#if os(iOS)
+        if AVAudioSession.sharedInstance().currentRoute.outputs.first != nil {
+            latency = AVAudioSession.sharedInstance().outputLatency
+        }
+#endif
+        
         toneGenerator.enqueue(sequence: sequence)
-        hapticEngine.play(sequence: sequence)
+        hapticEngine.play(sequence: sequence, delay: latency)
     }
     
     private func handleInterruption(notification: Notification) {
@@ -105,11 +128,13 @@ public final class MorseAudioEngine {
         
         if type == .began {
             engine.pause()
+            isRunning = false
         } else if type == .ended {
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
                     try? engine.start()
+                    isRunning = true
                 }
             }
         }
