@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 public final class DrillSession {
     public enum DrillState {
@@ -15,13 +16,6 @@ public final class DrillSession {
     
     public var inputBuffer: String = "" {
         didSet {
-            if currentState == .feedback || currentState == .idle {
-                if !inputBuffer.isEmpty {
-                    inputBuffer = ""
-                }
-                return
-            }
-            
             let sanitized = inputBuffer.uppercased().filter { $0.isASCII }
             if inputBuffer != sanitized {
                 inputBuffer = sanitized
@@ -48,14 +42,10 @@ public final class DrillSession {
         self.audioEngine = audioEngine
     }
     
-    deinit {
-        playbackTask?.cancel()
-        feedbackTask?.cancel()
-    }
-    
     public func startNextChallenge() {
         feedbackTask?.cancel()
         playbackTask?.cancel()
+        audioEngine.stop()
         
         let challenge = lessonProgression.nextChallenge()
         currentChallenge = challenge
@@ -71,23 +61,22 @@ public final class DrillSession {
         playbackTask = Task {
             try? await Task.sleep(for: .seconds(totalDuration))
             
-            if Task.isCancelled { return }
+            guard !Task.isCancelled else { return }
             
-            await MainActor.run {
-                if inputBuffer == currentChallenge?.text {
-                    isCorrect = true
-                    transitionToFeedback()
-                } else {
-                    currentState = .awaitingInput
-                    if inputBuffer.count >= (currentChallenge?.text.count ?? Int.max) {
-                        validateInput()
-                    }
+            if inputBuffer == currentChallenge?.text {
+                isCorrect = true
+                transitionToFeedback()
+            } else {
+                currentState = .awaitingInput
+                if inputBuffer.count >= (currentChallenge?.text.count ?? Int.max) {
+                    validateInput()
                 }
             }
         }
     }
     
     public func submitInput(_ char: String) {
+        guard currentState == .awaitingInput || currentState == .playingAudio else { return }
         inputBuffer += char
     }
     
@@ -109,11 +98,9 @@ public final class DrillSession {
         feedbackTask = Task {
             try? await Task.sleep(for: .seconds(1.5))
             
-            if Task.isCancelled { return }
+            guard !Task.isCancelled else { return }
             
-            await MainActor.run {
-                startNextChallenge()
-            }
+            startNextChallenge()
         }
     }
     
