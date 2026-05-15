@@ -7,52 +7,57 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1B30AD302031EF6B04F3BC99 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F886530AC935318AD42465AD /* ProgressStore.swift */; };
-		302A9850B2DB1AE8CCCF4D74 /* LessonProgression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B86630ED56F679D6658172A /* LessonProgression.swift */; };
-		3320A96AC99F03D654C5533D /* MorseTimingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCBA09AF5E8B5EF1C7D66F2A /* MorseTimingModel.swift */; };
-		3533AA2C83C320B3D140C5DC /* FarnsworthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3931B82A3B325EB990A374 /* FarnsworthApp.swift */; };
 		454B2A00F35E998E29CB88CA /* HapticEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BEE0E0D0153960E97C46D6 /* HapticEngine.swift */; };
-		476F0822BA029F72B7DF5A9F /* DrillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D30A919E7C6EA7E2776D447 /* DrillView.swift */; };
 		632F48D41D625569598BED6C /* MorseAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708E69D77B988BCA791E97F /* MorseAudioEngine.swift */; };
-		7229ED19A9446650D2163019 /* MorseInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E407B0F60EE5DB3A2DA4F8 /* MorseInputTextField.swift */; };
+		73C8EED9EA5BEDDEB47C107C /* FarnsworthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50598C183E8189FDA80838C /* FarnsworthTests.swift */; };
 		7FFF9ECB6AB793F2278C0AE2 /* ToneGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19F20FADCD86182DB4E19DB /* ToneGenerator.swift */; };
-		9A7449986EBE3DAE445EC986 /* DrillSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B842AA38D4E9ACEEA613C7 /* DrillSession.swift */; };
-		E409B58A8E4A317FAE66037D /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D6807F395558154EA954B4 /* Challenge.swift */; };
-		F8E293B73C93DFA05D746F2A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10CCC9ABF3E16CDC18C62A9 /* SettingsView.swift */; };
+		905734C1038267DC428F1FB4 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0016D24B5FAF9A1AE9381D8 /* Challenge.swift */; };
+		92BB1CC203BF9861931DCFF2 /* DrillSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E93E4E30486F34C042AE35E /* DrillSession.swift */; };
+		9E439388988A7996C8634AB3 /* FarnsworthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB12192E8327712E7C852 /* FarnsworthApp.swift */; };
+		A8865AF122750D979BAE765B /* DrillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50EA28740C3760D6D6B73111 /* DrillView.swift */; };
+		BAB18913A192BA7BD960B05D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBEA0936A04EBA8DBD40DF4 /* SettingsView.swift */; };
+		DC6A3B31371B536D5C95ACC9 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5986C869D68A97C5C3B7470B /* ProgressStore.swift */; };
+		F14685ADE87729FBA998060E /* MorseInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C66A4FA5F78289ABA2AD1DC /* MorseInputTextField.swift */; };
+		F9DFD40C1A2D21396A82EB03 /* MorseTimingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBEB22102BE30B5009401C8 /* MorseTimingModel.swift */; };
+		FC84B35B0D36D872F3F2B49F /* LessonProgression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA2A1EBCF189247929BEA5B /* LessonProgression.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		084425C8C25E6A9180A1608E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A6F533671954D607D5476A3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8AE980E9C2DB3762DF1DD30;
+			remoteInfo = Farnsworth;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		2FA2A1EBCF189247929BEA5B /* LessonProgression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonProgression.swift; sourceTree = "<group>"; };
+		2FBEA0936A04EBA8DBD40DF4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3708E69D77B988BCA791E97F /* MorseAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseAudioEngine.swift; sourceTree = "<group>"; };
-		50B842AA38D4E9ACEEA613C7 /* DrillSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillSession.swift; sourceTree = "<group>"; };
+		3C66A4FA5F78289ABA2AD1DC /* MorseInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseInputTextField.swift; sourceTree = "<group>"; };
+		3E93E4E30486F34C042AE35E /* DrillSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillSession.swift; sourceTree = "<group>"; };
+		50EA28740C3760D6D6B73111 /* DrillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillView.swift; sourceTree = "<group>"; };
+		5986C869D68A97C5C3B7470B /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
 		65BEE0E0D0153960E97C46D6 /* HapticEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticEngine.swift; sourceTree = "<group>"; };
-		88E407B0F60EE5DB3A2DA4F8 /* MorseInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseInputTextField.swift; sourceTree = "<group>"; };
-		8B86630ED56F679D6658172A /* LessonProgression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonProgression.swift; sourceTree = "<group>"; };
-		9D30A919E7C6EA7E2776D447 /* DrillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillView.swift; sourceTree = "<group>"; };
-		B10CCC9ABF3E16CDC18C62A9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		BC3931B82A3B325EB990A374 /* FarnsworthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarnsworthApp.swift; sourceTree = "<group>"; };
-		BCBA09AF5E8B5EF1C7D66F2A /* MorseTimingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseTimingModel.swift; sourceTree = "<group>"; };
+		688EB12192E8327712E7C852 /* FarnsworthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarnsworthApp.swift; sourceTree = "<group>"; };
+		91F8F00C9A0AEBB2EA49E2AC /* FarnsworthTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FarnsworthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0016D24B5FAF9A1AE9381D8 /* Challenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
+		CEBEB22102BE30B5009401C8 /* MorseTimingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseTimingModel.swift; sourceTree = "<group>"; };
+		E50598C183E8189FDA80838C /* FarnsworthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarnsworthTests.swift; sourceTree = "<group>"; };
 		F19F20FADCD86182DB4E19DB /* ToneGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToneGenerator.swift; sourceTree = "<group>"; };
-		F5D6807F395558154EA954B4 /* Challenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
-		F886530AC935318AD42465AD /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
 		FF2D2A2486F8EE0B17BD5EFC /* Farnsworth.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Farnsworth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		0BF875745138F2CAE5EF725D /* Store */ = {
+		0C1469392009F31224425DED /* FarnsworthTests */ = {
 			isa = PBXGroup;
 			children = (
-				50B842AA38D4E9ACEEA613C7 /* DrillSession.swift */,
-				F886530AC935318AD42465AD /* ProgressStore.swift */,
+				E50598C183E8189FDA80838C /* FarnsworthTests.swift */,
 			);
-			path = Store;
-			sourceTree = "<group>";
-		};
-		33868F71EF15DFA0EA6AC1E2 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				88E407B0F60EE5DB3A2DA4F8 /* MorseInputTextField.swift */,
-			);
-			path = Components;
+			name = FarnsworthTests;
+			path = Tests/FarnsworthTests;
 			sourceTree = "<group>";
 		};
 		3B421A4CCC2B3288A06BB973 /* Audio */ = {
@@ -65,27 +70,20 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
-		402B0E705A1C9C76827A834B /* .build */ = {
+		51B221C2A39D7B2496924EF8 /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				3E93E4E30486F34C042AE35E /* DrillSession.swift */,
+				5986C869D68A97C5C3B7470B /* ProgressStore.swift */,
 			);
-			path = .build;
-			sourceTree = "<group>";
-		};
-		65A55D172F55471DB25CEA46 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				F5D6807F395558154EA954B4 /* Challenge.swift */,
-				8B86630ED56F679D6658172A /* LessonProgression.swift */,
-				BCBA09AF5E8B5EF1C7D66F2A /* MorseTimingModel.swift */,
-			);
-			path = Models;
+			path = Store;
 			sourceTree = "<group>";
 		};
 		6F365F4E69752C73CF941643 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				FF2D2A2486F8EE0B17BD5EFC /* Farnsworth.app */,
+				91F8F00C9A0AEBB2EA49E2AC /* FarnsworthTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -93,42 +91,65 @@
 		7E475BA39EA929BD4A6E8C4A = {
 			isa = PBXGroup;
 			children = (
-				402B0E705A1C9C76827A834B /* .build */,
+				688EB12192E8327712E7C852 /* FarnsworthApp.swift */,
 				3B421A4CCC2B3288A06BB973 /* Audio */,
-				BB2DB7179D2F4020EB7656A8 /* farnesworth */,
-				65A55D172F55471DB25CEA46 /* Models */,
-				0BF875745138F2CAE5EF725D /* Store */,
-				BE4CE35D0FAC750212CA0DE3 /* Views */,
+				0C1469392009F31224425DED /* FarnsworthTests */,
+				FF7E74AF9C608DC32F3592C1 /* Models */,
+				51B221C2A39D7B2496924EF8 /* Store */,
+				AE8BE1150FB36C143A568822 /* Views */,
 				6F365F4E69752C73CF941643 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		BB2DB7179D2F4020EB7656A8 /* farnesworth */ = {
+		A11C820A51524DF1473746A5 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				BC3931B82A3B325EB990A374 /* FarnsworthApp.swift */,
-				3B421A4CCC2B3288A06BB973 /* Audio */,
-				65A55D172F55471DB25CEA46 /* Models */,
-				0BF875745138F2CAE5EF725D /* Store */,
-				BE4CE35D0FAC750212CA0DE3 /* Views */,
+				3C66A4FA5F78289ABA2AD1DC /* MorseInputTextField.swift */,
 			);
-			name = farnesworth;
-			path = .;
+			path = Components;
 			sourceTree = "<group>";
 		};
-		BE4CE35D0FAC750212CA0DE3 /* Views */ = {
+		AE8BE1150FB36C143A568822 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				9D30A919E7C6EA7E2776D447 /* DrillView.swift */,
-				B10CCC9ABF3E16CDC18C62A9 /* SettingsView.swift */,
-				33868F71EF15DFA0EA6AC1E2 /* Components */,
+				50EA28740C3760D6D6B73111 /* DrillView.swift */,
+				2FBEA0936A04EBA8DBD40DF4 /* SettingsView.swift */,
+				A11C820A51524DF1473746A5 /* Components */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		FF7E74AF9C608DC32F3592C1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C0016D24B5FAF9A1AE9381D8 /* Challenge.swift */,
+				2FA2A1EBCF189247929BEA5B /* LessonProgression.swift */,
+				CEBEB22102BE30B5009401C8 /* MorseTimingModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CA34B2163F21791B7988B628 /* FarnsworthTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C2538E5B6B14BD023110B74E /* Build configuration list for PBXNativeTarget "FarnsworthTests" */;
+			buildPhases = (
+				1F0CADFABA0EE547025EF7CC /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				67FE3B28429DBE862EEE7238 /* PBXTargetDependency */,
+			);
+			name = FarnsworthTests;
+			packageProductDependencies = (
+			);
+			productName = FarnsworthTests;
+			productReference = 91F8F00C9A0AEBB2EA49E2AC /* FarnsworthTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		E8AE980E9C2DB3762DF1DD30 /* Farnsworth */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9A200309C7B16116E0EAEE7F /* Build configuration list for PBXNativeTarget "Farnsworth" */;
@@ -172,33 +193,68 @@
 			projectRoot = "";
 			targets = (
 				E8AE980E9C2DB3762DF1DD30 /* Farnsworth */,
+				CA34B2163F21791B7988B628 /* FarnsworthTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1F0CADFABA0EE547025EF7CC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73C8EED9EA5BEDDEB47C107C /* FarnsworthTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CA590E2455102B2173DF18FD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E409B58A8E4A317FAE66037D /* Challenge.swift in Sources */,
-				9A7449986EBE3DAE445EC986 /* DrillSession.swift in Sources */,
-				476F0822BA029F72B7DF5A9F /* DrillView.swift in Sources */,
-				3533AA2C83C320B3D140C5DC /* FarnsworthApp.swift in Sources */,
+				905734C1038267DC428F1FB4 /* Challenge.swift in Sources */,
+				92BB1CC203BF9861931DCFF2 /* DrillSession.swift in Sources */,
+				A8865AF122750D979BAE765B /* DrillView.swift in Sources */,
+				9E439388988A7996C8634AB3 /* FarnsworthApp.swift in Sources */,
 				454B2A00F35E998E29CB88CA /* HapticEngine.swift in Sources */,
-				302A9850B2DB1AE8CCCF4D74 /* LessonProgression.swift in Sources */,
+				FC84B35B0D36D872F3F2B49F /* LessonProgression.swift in Sources */,
 				632F48D41D625569598BED6C /* MorseAudioEngine.swift in Sources */,
-				7229ED19A9446650D2163019 /* MorseInputTextField.swift in Sources */,
-				3320A96AC99F03D654C5533D /* MorseTimingModel.swift in Sources */,
-				1B30AD302031EF6B04F3BC99 /* ProgressStore.swift in Sources */,
-				F8E293B73C93DFA05D746F2A /* SettingsView.swift in Sources */,
+				F14685ADE87729FBA998060E /* MorseInputTextField.swift in Sources */,
+				F9DFD40C1A2D21396A82EB03 /* MorseTimingModel.swift in Sources */,
+				DC6A3B31371B536D5C95ACC9 /* ProgressStore.swift in Sources */,
+				BAB18913A192BA7BD960B05D /* SettingsView.swift in Sources */,
 				7FFF9ECB6AB793F2278C0AE2 /* ToneGenerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		67FE3B28429DBE862EEE7238 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E8AE980E9C2DB3762DF1DD30 /* Farnsworth */;
+			targetProxy = 084425C8C25E6A9180A1608E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0FAC7E2D12B47CC0FB5E27CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.FarnsworthTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Farnsworth.app/Farnsworth";
+			};
+			name = Release;
+		};
 		2A1018F2B68399698E09473F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -354,6 +410,24 @@
 			};
 			name = Release;
 		};
+		A7F5CC535C6E24DEBA90696E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.FarnsworthTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Farnsworth.app/Farnsworth";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -371,6 +445,15 @@
 			buildConfigurations = (
 				5F2BF1256705C64FB6BF9408 /* Debug */,
 				96DE7F378F39F9F9F2CE0857 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C2538E5B6B14BD023110B74E /* Build configuration list for PBXNativeTarget "FarnsworthTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7F5CC535C6E24DEBA90696E /* Debug */,
+				0FAC7E2D12B47CC0FB5E27CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

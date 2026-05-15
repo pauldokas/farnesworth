@@ -7,16 +7,23 @@ targets:
     platform: iOS
     deploymentTarget: "17.0"
     sources:
-      - path: .
-        excludes:
-          - "AGENTS.md"
-          - ".sisyphus"
-          - "boulder.json"
-          - "Package.swift"
-          - "project.yml"
-          - "Farnsworth.xcodeproj"
+      - path: Audio
+      - path: Models
+      - path: Store
+      - path: Views
+      - path: FarnsworthApp.swift
     settings:
       GENERATE_INFOPLIST_FILE: YES
       CURRENT_PROJECT_VERSION: 1
       MARKETING_VERSION: 1.0
       PRODUCT_BUNDLE_IDENTIFIER: com.example.Farnsworth
+  FarnsworthTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources: [Tests/FarnsworthTests]
+    dependencies:
+      - target: Farnsworth
+    settings:
+      GENERATE_INFOPLIST_FILE: YES
+      PRODUCT_BUNDLE_IDENTIFIER: com.example.FarnsworthTests
