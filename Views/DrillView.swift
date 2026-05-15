@@ -20,7 +20,7 @@ struct DrillView: View {
                         )
                     }
                     session?.startNextChallenge()
-                }) {
+                }, label: {
                     Text("Start Drill")
                         .font(.title2)
                         .fontWeight(.bold)
@@ -29,7 +29,7 @@ struct DrillView: View {
                         .background(Color.accentColor)
                         .foregroundColor(.white)
                         .cornerRadius(16)
-                }
+                })
                 .padding(.horizontal, 32)
             } else if let session = session {
                 VStack(spacing: 24) {

@@ -26,18 +26,18 @@ public class MorseTimingModel {
     }
     
     public init(characterSpeed: Double = 20.0, effectiveSpeed: Double = 15.0) {
-        var wc = characterSpeed.isNaN ? 20.0 : characterSpeed
-        var we = effectiveSpeed.isNaN ? 15.0 : effectiveSpeed
+        var charSpeed = characterSpeed.isNaN ? 20.0 : characterSpeed
+        var effSpeed = effectiveSpeed.isNaN ? 15.0 : effectiveSpeed
         
-        wc = min(max(wc, 5.0), 100.0)
-        we = min(max(we, 5.0), 100.0)
+        charSpeed = min(max(charSpeed, 5.0), 100.0)
+        effSpeed = min(max(effSpeed, 5.0), 100.0)
         
-        if we > wc {
-            wc = we
+        if effSpeed > charSpeed {
+            charSpeed = effSpeed
         }
         
-        self.characterSpeed = wc
-        self.effectiveSpeed = we
+        self.characterSpeed = charSpeed
+        self.effectiveSpeed = effSpeed
     }
     
     public var dotUnit: Double {
