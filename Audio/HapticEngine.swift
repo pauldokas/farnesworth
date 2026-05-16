@@ -1,12 +1,16 @@
 import Foundation
 import CoreHaptics
 import Observation
+import os
 
 /// Manages the CHHapticEngine for tactile feedback synchronized with Morse code.
+@MainActor
 @Observable
 public final class HapticEngine {
     private var engine: CHHapticEngine?
+    private var activePlayer: CHHapticPatternPlayer?
     public var isEnabled: Bool = true
+    private let logger = Logger(subsystem: "com.example.Farnsworth", category: "HapticEngine")
 
     public init() {
         prepareEngine()
@@ -19,16 +23,20 @@ public final class HapticEngine {
             engine = try CHHapticEngine()
             try engine?.start()
 
-            engine?.stoppedHandler = { reason in
-                print("Haptic engine stopped: \(reason)")
+            engine?.stoppedHandler = { [weak self] reason in
+                self?.logger.warning("Haptic engine stopped: \(String(describing: reason))")
             }
 
             engine?.resetHandler = { [weak self] in
-                print("Haptic engine reset")
-                try? self?.engine?.start()
+                self?.logger.info("Haptic engine reset")
+                do {
+                    try self?.engine?.start()
+                } catch {
+                    self?.logger.error("Failed to restart haptic engine: \(error.localizedDescription, privacy: .public)")
+                }
             }
         } catch {
-            print("Failed to start haptic engine: \(error)")
+            logger.error("Failed to start haptic engine: \(error.localizedDescription, privacy: .public)")
         }
     }
 
@@ -36,6 +44,8 @@ public final class HapticEngine {
     /// - Parameter sequence: A list of (isTone, duration) pairs.
     public func play(sequence: [(isTone: Bool, duration: Double)], delay: TimeInterval = 0) {
         guard isEnabled, let engine = engine else { return }
+
+        stop()
 
         var events: [CHHapticEvent] = []
         var relativeTime: TimeInterval = 0
@@ -58,15 +68,19 @@ public final class HapticEngine {
 
         do {
             let pattern = try CHHapticPattern(events: events, parameters: [])
-            let player = try engine.makePlayer(with: pattern)
-            try player.start(atTime: CHHapticTimeImmediate + delay)
+            activePlayer = try engine.makePlayer(with: pattern)
+            try activePlayer?.start(atTime: CHHapticTimeImmediate + delay)
         } catch {
-            print("Failed to play haptic pattern: \(error)")
+            logger.error("Failed to play haptic pattern: \(error.localizedDescription, privacy: .public)")
         }
     }
 
     public func stop() {
-        engine?.stop(completionHandler: nil)
-        try? engine?.start()
+        do {
+            try activePlayer?.cancel()
+            activePlayer = nil
+        } catch {
+            logger.error("Failed to cancel haptic player: \(error.localizedDescription, privacy: .public)")
+        }
     }
 }

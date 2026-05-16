@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import Observation
+import os
 
 @Model
 public final class UserProgress {
@@ -12,15 +13,13 @@ public final class UserProgress {
         if let active = activeCharacters {
             self.activeCharacters = active
         } else {
-            let initialChars = ["K", "M", "R", "S", "U", "A", "P", "T", "L", "O",
-                                "W", "I", ".", "N", "J", "E", "F", "0", "Y", "V",
-                                "G", "5", "/", "Q", "9", "Z", "H", "3", "8", "B",
-                                "?", "4", "2", "7", "C", "1", "D", "6", "X"]
+            let initialChars = LessonProgression.kochSequenceStrings
             self.activeCharacters = Array(initialChars.prefix(max(2, unlockedCount)))
         }
     }
 }
 
+@MainActor
 @Observable
 public final class ProgressStore {
     private var modelContext: ModelContext
@@ -38,10 +37,7 @@ public final class ProgressStore {
             let results = try modelContext.fetch(descriptor)
             if let first = results.first {
                 if first.activeCharacters.isEmpty {
-                    let initialChars = ["K", "M", "R", "S", "U", "A", "P", "T", "L", "O",
-                                        "W", "I", ".", "N", "J", "E", "F", "0", "Y", "V",
-                                        "G", "5", "/", "Q", "9", "Z", "H", "3", "8", "B",
-                                        "?", "4", "2", "7", "C", "1", "D", "6", "X"]
+                    let initialChars = LessonProgression.kochSequenceStrings
                     first.activeCharacters = Array(initialChars.prefix(max(2, first.unlockedCount)))
                 }
                 currentProgress = first
@@ -51,17 +47,15 @@ public final class ProgressStore {
                 currentProgress = newProgress
             }
         } catch {
-            print("Failed to fetch progress: \(error)")
+            let logger = Logger(subsystem: "com.example.Farnsworth", category: "ProgressStore")
+            logger.error("Failed to fetch progress: \(error.localizedDescription, privacy: .public)")
         }
     }
 
     public func updateUnlockedCount(_ count: Int) {
         if let progress = currentProgress {
             progress.unlockedCount = count
-            let initialChars = ["K", "M", "R", "S", "U", "A", "P", "T", "L", "O",
-                                "W", "I", ".", "N", "J", "E", "F", "0", "Y", "V",
-                                "G", "5", "/", "Q", "9", "Z", "H", "3", "8", "B",
-                                "?", "4", "2", "7", "C", "1", "D", "6", "X"]
+            let initialChars = LessonProgression.kochSequenceStrings
             if count <= initialChars.count {
                 let newChar = initialChars[count - 1]
                 if !progress.activeCharacters.contains(newChar) {
@@ -73,7 +67,12 @@ public final class ProgressStore {
             modelContext.insert(newProgress)
             currentProgress = newProgress
         }
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            let logger = Logger(subsystem: "com.example.Farnsworth", category: "ProgressStore")
+            logger.error("Failed to save progress in updateUnlockedCount: \(error.localizedDescription, privacy: .public)")
+        }
     }
 
     public func toggleCharacterActive(_ character: String) {
@@ -86,6 +85,11 @@ public final class ProgressStore {
         } else {
             progress.activeCharacters.append(character)
         }
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            let logger = Logger(subsystem: "com.example.Farnsworth", category: "ProgressStore")
+            logger.error("Failed to save progress in toggleCharacterActive: \(error.localizedDescription, privacy: .public)")
+        }
     }
 }

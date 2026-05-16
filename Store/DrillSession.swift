@@ -16,11 +16,6 @@ public final class DrillSession {
 
     public var inputBuffer: String = "" {
         didSet {
-            let sanitized = inputBuffer.uppercased().filter { $0.isASCII }
-            if inputBuffer != sanitized {
-                inputBuffer = sanitized
-            }
-
             if currentState == .awaitingInput {
                 validateInput()
             }
@@ -56,6 +51,7 @@ public final class DrillSession {
         playbackTask?.cancel()
         audioEngine.stop()
 
+        self.lessonProgression.activeCharacters = progressStore.currentProgress?.activeCharacters.map { Character($0) } ?? ["K", "M"]
         let challenge = lessonProgression.nextChallenge()
         currentChallenge = challenge
         inputBuffer = ""
@@ -65,33 +61,37 @@ public final class DrillSession {
         let sequence = convertMorseToSequence(challenge.morseCode)
         let totalDuration = sequence.reduce(0.0) { $0 + $1.duration }
 
-        audioEngine.play(sequence: sequence)
+        let latency = audioEngine.play(sequence: sequence)
 
-        playbackTask = Task {
-            try? await Task.sleep(for: .seconds(totalDuration))
+        playbackTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(totalDuration + latency))
 
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, let self = self else { return }
 
-            if inputBuffer == currentChallenge?.text {
-                isCorrect = true
-                recordResult(true)
-                transitionToFeedback()
-            } else {
-                currentState = .awaitingInput
-                if inputBuffer.count >= (currentChallenge?.text.count ?? Int.max) {
-                    validateInput()
-                }
+            while !self.audioEngine.isPlaybackComplete && self.audioEngine.isRunning {
+                if Task.isCancelled { return }
+                try? await Task.sleep(for: .milliseconds(10))
+            }
+
+            try? await Task.sleep(for: .seconds(latency))
+            if Task.isCancelled { return }
+
+            self.currentState = .awaitingInput
+            if self.inputBuffer.count >= (self.currentChallenge?.text.count ?? Int.max) {
+                self.validateInput()
             }
         }
     }
 
     public func submitInput(_ char: String) {
-        guard currentState == .awaitingInput || currentState == .playingAudio else { return }
-        inputBuffer += char
+        guard currentState == .awaitingInput else { return }
+        let sanitized = char.uppercased().filter { $0.isASCII }
+        guard !sanitized.isEmpty else { return }
+        inputBuffer += sanitized
     }
 
     public func backspaceInput() {
-        guard currentState == .awaitingInput || currentState == .playingAudio else { return }
+        guard currentState == .awaitingInput else { return }
         if !inputBuffer.isEmpty {
             inputBuffer.removeLast()
         }
@@ -136,13 +136,19 @@ public final class DrillSession {
     private func transitionToFeedback() {
         currentState = .feedback
 
-        feedbackTask = Task {
+        feedbackTask = Task { [weak self] in
             try? await Task.sleep(for: .seconds(1.5))
 
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, let self = self else { return }
 
-            startNextChallenge()
+            self.startNextChallenge()
         }
+    }
+
+    public func cancel() {
+        playbackTask?.cancel()
+        feedbackTask?.cancel()
+        audioEngine.stop()
     }
 
     private func convertMorseToSequence(_ morse: String) -> [(isTone: Bool, duration: Double)] {

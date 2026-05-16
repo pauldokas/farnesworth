@@ -40,10 +40,12 @@ final class DrillSessionTests: XCTestCase {
     }
 
     func testInputSanitization() {
-        session.inputBuffer = "k"
+        session.currentState = .awaitingInput
+        session.submitInput("k")
         XCTAssertEqual(session.inputBuffer, "K")
 
-        session.inputBuffer = "k1!"
+        session.inputBuffer = ""
+        session.submitInput("k1!")
         XCTAssertEqual(session.inputBuffer, "K1!")
     }
 
@@ -51,9 +53,8 @@ final class DrillSessionTests: XCTestCase {
         session.startNextChallenge()
         let challenge = try XCTUnwrap(session.currentChallenge)
 
+        session.currentState = .awaitingInput
         session.submitInput(challenge.text)
-
-        try? await Task.sleep(for: .milliseconds(500))
 
         XCTAssertEqual(session.isCorrect, true)
         XCTAssertEqual(session.currentState, .feedback)
@@ -64,9 +65,8 @@ final class DrillSessionTests: XCTestCase {
         let challenge = try XCTUnwrap(session.currentChallenge)
         let wrongChar = challenge.text == "K" ? "M" : "K"
 
+        session.currentState = .awaitingInput
         session.submitInput(wrongChar)
-
-        try? await Task.sleep(for: .milliseconds(500))
 
         XCTAssertEqual(session.isCorrect, false)
         XCTAssertEqual(session.currentState, .feedback)

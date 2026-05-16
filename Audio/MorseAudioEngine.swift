@@ -1,14 +1,17 @@
 import Foundation
 import AVFoundation
 import Observation
+import os
 
 /// Manages the AVAudioEngine and AVAudioSession for Morse code playback.
+@MainActor
 @Observable
 public final class MorseAudioEngine {
     private let engine = AVAudioEngine()
     private let sourceNode: AVAudioSourceNode
     private let toneGenerator: ToneGenerator
     private let hapticEngine = HapticEngine()
+    private let logger = Logger(subsystem: "com.example.Farnsworth", category: "MorseAudioEngine")
 
     public private(set) var isRunning = false
 
@@ -20,20 +23,39 @@ public final class MorseAudioEngine {
         }
     }
 
-    public var tonePitch: Double = UserDefaults.standard.object(forKey: "tonePitch") as? Double ?? 600.0 {
+    public var isPlaybackComplete: Bool {
+        return toneGenerator.isPlaybackComplete
+    }
+
+    public var tonePitch: Double {
         didSet {
+            if tonePitch.isNaN { tonePitch = 600.0 }
+            if tonePitch < 100.0 { tonePitch = 100.0 }
+            if tonePitch > 2000.0 { tonePitch = 2000.0 }
             UserDefaults.standard.set(tonePitch, forKey: "tonePitch")
             toneGenerator.setFrequency(tonePitch)
         }
     }
 
-    private var notificationObservers: [Any] = []
+    private final class NotificationTaskTracker: @unchecked Sendable {
+        private let lock = NSLock()
+        private var tasks: [Task<Void, Never>] = []
 
-    deinit {
-        for observer in notificationObservers {
-            NotificationCenter.default.removeObserver(observer)
+        func add(_ task: Task<Void, Never>) {
+            lock.lock()
+            tasks.append(task)
+            lock.unlock()
+        }
+
+        deinit {
+            lock.lock()
+            let currentTasks = tasks
+            lock.unlock()
+            for task in currentTasks { task.cancel() }
         }
     }
+
+    private let taskTracker = NotificationTaskTracker()
 
     public init() {
 #if os(iOS)
@@ -50,6 +72,12 @@ public final class MorseAudioEngine {
         if let savedHaptics = UserDefaults.standard.object(forKey: "isHapticsEnabled") as? Bool {
             self.hapticEngine.isEnabled = savedHaptics
         }
+
+        var initialPitch = UserDefaults.standard.object(forKey: "tonePitch") as? Double ?? 600.0
+        if initialPitch.isNaN { initialPitch = 600.0 }
+        if initialPitch < 100.0 { initialPitch = 100.0 }
+        if initialPitch > 2000.0 { initialPitch = 2000.0 }
+        self.tonePitch = initialPitch
 
         self.toneGenerator.setFrequency(self.tonePitch)
 
@@ -69,23 +97,21 @@ public final class MorseAudioEngine {
 
     private func setupNotifications() {
 #if os(iOS)
-        let interruptionObserver = NotificationCenter.default.addObserver(
-            forName: AVAudioSession.interruptionNotification,
-            object: AVAudioSession.sharedInstance(),
-            queue: .main
-        ) { [weak self] notification in
-            self?.handleInterruption(notification: notification)
+        let interruptionTask = Task { [weak self] in
+            for await notification in NotificationCenter.default.notifications(named: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance()) {
+                guard let self = self else { break }
+                self.handleInterruption(notification: notification)
+            }
         }
-        notificationObservers.append(interruptionObserver)
 
-        let routeChangeObserver = NotificationCenter.default.addObserver(
-            forName: AVAudioSession.routeChangeNotification,
-            object: AVAudioSession.sharedInstance(),
-            queue: .main
-        ) { [weak self] notification in
-            self?.handleRouteChange(notification: notification)
+        let routeChangeTask = Task { [weak self] in
+            for await notification in NotificationCenter.default.notifications(named: AVAudioSession.routeChangeNotification, object: AVAudioSession.sharedInstance()) {
+                guard let self = self else { break }
+                self.handleRouteChange(notification: notification)
+            }
         }
-        notificationObservers.append(routeChangeObserver)
+        taskTracker.add(interruptionTask)
+        taskTracker.add(routeChangeTask)
 #endif
     }
 
@@ -108,18 +134,23 @@ public final class MorseAudioEngine {
         isRunning = false
 
 #if os(iOS)
-        try? AVAudioSession.sharedInstance().setActive(false, options: [])
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: [])
+        } catch {
+            logger.error("Failed to deactivate audio session: \(error.localizedDescription, privacy: .public)")
+        }
 #endif
     }
 
     /// Plays a sequence of Morse code elements.
     /// - Parameter sequence: A list of (isTone, duration) pairs.
-    public func play(sequence: [(isTone: Bool, duration: Double)]) {
+    public func play(sequence: [(isTone: Bool, duration: Double)]) -> TimeInterval {
         if !isRunning {
             do {
                 try start()
             } catch {
-                return
+                logger.error("Failed to start audio engine for playback: \(error.localizedDescription, privacy: .public)")
+                return 0.0
             }
         }
 
@@ -132,6 +163,8 @@ public final class MorseAudioEngine {
 
         toneGenerator.enqueue(sequence: sequence)
         hapticEngine.play(sequence: sequence, delay: latency)
+
+        return latency
     }
 
     private func handleInterruption(notification: Notification) {
@@ -149,8 +182,12 @@ public final class MorseAudioEngine {
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
-                    try? engine.start()
-                    isRunning = true
+                    do {
+                        try engine.start()
+                        isRunning = true
+                    } catch {
+                        logger.error("Failed to resume audio engine after interruption: \(error.localizedDescription, privacy: .public)")
+                    }
                 }
             }
         }

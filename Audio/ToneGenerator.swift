@@ -9,90 +9,98 @@ public final class ToneGenerator {
         var frequency: Double
     }
 
-    private struct RenderContext {
-        var bufferSize: Int
-        var events: UnsafeMutablePointer<MorseEvent>
-        var readIndex: ManagedAtomic<Int>
-        var writeIndex: ManagedAtomic<Int>
+    private final class RenderContext {
+        let bufferSize: Int
+        let events: UnsafeMutablePointer<MorseEvent>
+        let readIndex: UnsafeAtomic<Int>
+        let writeIndex: UnsafeAtomic<Int>
         var currentEventIsTone: Bool
-        var currentEventRemainingSamples: Int32
+        let currentEventRemainingSamples: UnsafeAtomic<Int32>
         var currentEventTotalSamples: Int32
         var currentEventFrequency: Double
         var phase: Double
-        var sampleRate: Double
-        var envelopeDuration: Double
-        var isStopped: ManagedAtomic<Bool>
+        let sampleRate: Double
+        let envelopeDuration: Double
+        let isStopped: UnsafeAtomic<Bool>
+
+        init(sampleRate: Double, bufferSize: Int) {
+            self.sampleRate = sampleRate
+            self.bufferSize = bufferSize
+            self.events = UnsafeMutablePointer<MorseEvent>.allocate(capacity: bufferSize)
+            self.events.initialize(repeating: MorseEvent(isTone: false, samples: 0, frequency: 600.0), count: bufferSize)
+            self.readIndex = UnsafeAtomic<Int>.create(0)
+            self.writeIndex = UnsafeAtomic<Int>.create(0)
+            self.currentEventIsTone = false
+            self.currentEventRemainingSamples = UnsafeAtomic<Int32>.create(0)
+            self.currentEventTotalSamples = 0
+            self.currentEventFrequency = 600.0
+            self.phase = 0.0
+            self.envelopeDuration = 0.005
+            self.isStopped = UnsafeAtomic<Bool>.create(false)
+        }
+
+        deinit {
+            readIndex.destroy()
+            writeIndex.destroy()
+            currentEventRemainingSamples.destroy()
+            isStopped.destroy()
+            events.deallocate()
+        }
     }
 
     private let sampleRate: Double
-    private let bufferSize: Int = 8192
+    private let bufferSize: Int = 65536
 
-    private let contextPointer: UnsafeMutablePointer<RenderContext>
+    private let context: RenderContext
     private var currentFrequency: Double = 600.0
     // Lock used ONLY by producer (enqueue and setFrequency), never by consumer
-    private var producerLock = os_unfair_lock()
+    private let producerLock = NSLock()
 
     public init(sampleRate: Double) {
         self.sampleRate = sampleRate
-
-        let eventsPointer = UnsafeMutablePointer<MorseEvent>.allocate(capacity: bufferSize)
-        eventsPointer.initialize(repeating: MorseEvent(isTone: false, samples: 0, frequency: 600.0), count: bufferSize)
-
-        self.contextPointer = UnsafeMutablePointer<RenderContext>.allocate(capacity: 1)
-        self.contextPointer.initialize(to: RenderContext(
-            bufferSize: bufferSize,
-            events: eventsPointer,
-            readIndex: ManagedAtomic<Int>(0),
-            writeIndex: ManagedAtomic<Int>(0),
-            currentEventIsTone: false,
-            currentEventRemainingSamples: 0,
-            currentEventTotalSamples: 0,
-            currentEventFrequency: 600.0,
-            phase: 0.0,
-            sampleRate: sampleRate,
-            envelopeDuration: 0.005,
-            isStopped: ManagedAtomic<Bool>(false)
-        ))
-    }
-
-    deinit {
-        contextPointer.pointee.events.deallocate()
-        contextPointer.deallocate()
+        self.context = RenderContext(sampleRate: sampleRate, bufferSize: bufferSize)
     }
 
     public func enqueue(sequence: [(isTone: Bool, duration: Double)]) {
-        os_unfair_lock_lock(&producerLock)
-        defer { os_unfair_lock_unlock(&producerLock) }
+        producerLock.lock()
+        defer { producerLock.unlock() }
 
-        let context = contextPointer
-
-        if context.pointee.isStopped.load(ordering: .relaxed) {
-            context.pointee.isStopped.store(false, ordering: .relaxed)
-        }
-
+        let ctx = context
         let frequency = self.currentFrequency
 
         for event in sequence {
             let samples = Int32(event.duration * sampleRate)
-            let currentWrite = context.pointee.writeIndex.load(ordering: .relaxed)
+            let currentWrite = ctx.writeIndex.load(ordering: .relaxed)
             let nextWriteIndex = (currentWrite + 1) % bufferSize
-            let currentRead = context.pointee.readIndex.load(ordering: .acquiring)
+            let currentRead = ctx.readIndex.load(ordering: .acquiring)
 
             if nextWriteIndex != currentRead {
-                context.pointee.events[currentWrite] = MorseEvent(isTone: event.isTone, samples: samples, frequency: frequency)
-                context.pointee.writeIndex.store(nextWriteIndex, ordering: .releasing)
+                ctx.events[currentWrite] = MorseEvent(isTone: event.isTone, samples: samples, frequency: frequency)
+                ctx.writeIndex.store(nextWriteIndex, ordering: .releasing)
+            } else {
+                #if DEBUG
+                print("ToneGenerator buffer overflow. Dropping events. Increase buffer size or chunk data.")
+                #endif
+                break
             }
         }
     }
 
     public func setFrequency(_ frequency: Double) {
-        os_unfair_lock_lock(&producerLock)
+        producerLock.lock()
         self.currentFrequency = frequency
-        os_unfair_lock_unlock(&producerLock)
+        producerLock.unlock()
+    }
+
+    public var isPlaybackComplete: Bool {
+        let readIdx = context.readIndex.load(ordering: .relaxed)
+        let writeIdx = context.writeIndex.load(ordering: .relaxed)
+        let remaining = context.currentEventRemainingSamples.load(ordering: .relaxed)
+        return readIdx == writeIdx && remaining <= 0
     }
 
     public var renderBlock: AVAudioSourceNodeRenderBlock {
-        let ctxPtr = self.contextPointer
+        let ctx = self.context
 
         return { (_, _, frameCount, outputData) -> OSStatus in
             let abl = UnsafeMutableAudioBufferListPointer(outputData)
@@ -100,52 +108,44 @@ public final class ToneGenerator {
                 return noErr
             }
 
-            if ctxPtr.pointee.isStopped.load(ordering: .relaxed) {
-                let writeIdx = ctxPtr.pointee.writeIndex.load(ordering: .relaxed)
-                ctxPtr.pointee.readIndex.store(writeIdx, ordering: .relaxed)
-                ctxPtr.pointee.currentEventRemainingSamples = 0
-                ctxPtr.pointee.currentEventTotalSamples = 0
-                ctxPtr.pointee.currentEventIsTone = false
-
-                for frame in 0..<Int(frameCount) {
-                    buffer[frame] = 0.0
-                }
-                return noErr
-            }
-
             for frame in 0..<Int(frameCount) {
-                if ctxPtr.pointee.currentEventRemainingSamples <= 0 {
-                    let readIdx = ctxPtr.pointee.readIndex.load(ordering: .relaxed)
-                    let writeIdx = ctxPtr.pointee.writeIndex.load(ordering: .acquiring)
+                if ctx.isStopped.load(ordering: .relaxed) {
+                    buffer[frame] = 0.0
+                    continue
+                }
+
+                var remaining = ctx.currentEventRemainingSamples.load(ordering: .relaxed)
+                if remaining <= 0 {
+                    let readIdx = ctx.readIndex.load(ordering: .relaxed)
+                    let writeIdx = ctx.writeIndex.load(ordering: .acquiring)
 
                     if readIdx != writeIdx {
-                        let event = ctxPtr.pointee.events[readIdx]
-                        ctxPtr.pointee.currentEventIsTone = event.isTone
-                        ctxPtr.pointee.currentEventRemainingSamples = event.samples
-                        ctxPtr.pointee.currentEventTotalSamples = event.samples
-                        ctxPtr.pointee.currentEventFrequency = event.frequency
+                        let event = ctx.events[readIdx]
+                        ctx.currentEventIsTone = event.isTone
+                        remaining = event.samples
+                        ctx.currentEventRemainingSamples.store(remaining, ordering: .relaxed)
+                        ctx.currentEventTotalSamples = event.samples
+                        ctx.currentEventFrequency = event.frequency
 
-                        let nextReadIndex = (readIdx + 1) % ctxPtr.pointee.bufferSize
-                        ctxPtr.pointee.readIndex.store(nextReadIndex, ordering: .releasing)
+                        let nextReadIndex = (readIdx + 1) % ctx.bufferSize
+                        ctx.readIndex.store(nextReadIndex, ordering: .releasing)
                     } else {
-                        ctxPtr.pointee.currentEventIsTone = false
-                        ctxPtr.pointee.currentEventRemainingSamples = 0
-                        ctxPtr.pointee.currentEventTotalSamples = 0
+                        ctx.currentEventIsTone = false
+                        ctx.currentEventTotalSamples = 0
                     }
                 }
 
                 var sample: Float = 0.0
-                if ctxPtr.pointee.currentEventIsTone && ctxPtr.pointee.currentEventRemainingSamples > 0 {
-                    sample = Float(sin(ctxPtr.pointee.phase))
-                    ctxPtr.pointee.phase += 2.0 * .pi * ctxPtr.pointee.currentEventFrequency / ctxPtr.pointee.sampleRate
-                    if ctxPtr.pointee.phase >= 2.0 * .pi { ctxPtr.pointee.phase -= 2.0 * .pi }
+                if ctx.currentEventIsTone && remaining > 0 {
+                    sample = Float(sin(ctx.phase))
+                    ctx.phase += 2.0 * .pi * ctx.currentEventFrequency / ctx.sampleRate
+                    if ctx.phase >= 2.0 * .pi { ctx.phase -= 2.0 * .pi }
 
-                    let elapsed = ctxPtr.pointee.currentEventTotalSamples - ctxPtr.pointee.currentEventRemainingSamples
-                    let remaining = ctxPtr.pointee.currentEventRemainingSamples
+                    let elapsed = ctx.currentEventTotalSamples - remaining
 
-                    var envelopeSamples = Int32(ctxPtr.pointee.envelopeDuration * ctxPtr.pointee.sampleRate)
-                    if ctxPtr.pointee.currentEventTotalSamples < envelopeSamples * 2 {
-                        envelopeSamples = max(1, ctxPtr.pointee.currentEventTotalSamples / 2)
+                    var envelopeSamples = Int32(ctx.envelopeDuration * ctx.sampleRate)
+                    if ctx.currentEventTotalSamples < envelopeSamples * 2 {
+                        envelopeSamples = max(1, ctx.currentEventTotalSamples / 2)
                     }
 
                     var multiplier: Double = 1.0
@@ -156,12 +156,13 @@ public final class ToneGenerator {
                     }
                     sample *= Float(multiplier)
                 } else {
-                    ctxPtr.pointee.phase = 0.0
+                    ctx.phase = 0.0
                 }
 
                 buffer[frame] = sample
-                if ctxPtr.pointee.currentEventRemainingSamples > 0 {
-                    ctxPtr.pointee.currentEventRemainingSamples -= 1
+                if remaining > 0 {
+                    remaining -= 1
+                    ctx.currentEventRemainingSamples.store(remaining, ordering: .relaxed)
                 }
             }
             return noErr
@@ -169,6 +170,13 @@ public final class ToneGenerator {
     }
 
     public func stop() {
-        contextPointer.pointee.isStopped.store(true, ordering: .relaxed)
+        producerLock.lock()
+        defer { producerLock.unlock() }
+
+        context.isStopped.store(true, ordering: .relaxed)
+        let currentRead = context.readIndex.load(ordering: .relaxed)
+        context.writeIndex.store(currentRead, ordering: .relaxed)
+        context.currentEventRemainingSamples.store(0, ordering: .relaxed)
+        context.isStopped.store(false, ordering: .relaxed)
     }
 }

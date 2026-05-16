@@ -19,6 +19,9 @@ targets:
     dependencies:
       - package: swift-atomics
         product: Atomics
+    infoPlist:
+      NSAppTransportSecurity:
+        NSAllowsArbitraryLoads: false
     postBuildScripts:
       - script: |
           if which swiftlint >/dev/null; then

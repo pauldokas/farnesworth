@@ -8,6 +8,8 @@ public struct LessonProgression {
         "?", "4", "2", "7", "C", "1", "D", "6", "X"
     ]
 
+    public static let kochSequenceStrings: [String] = kochSequence.map { String($0) }
+
     private static let morseMapping: [Character: String] = [
         "K": "-.-", "M": "--", "R": ".-.", "S": "...", "U": "..-", "A": ".-",
         "P": ".--.", "T": "-", "L": ".-..", "O": "---", "W": ".--", "I": "..",

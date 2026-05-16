@@ -65,6 +65,9 @@ struct DrillView: View {
             Spacer(minLength: 8)
         }
         .animation(.easeInOut, value: session?.currentState)
+        .onDisappear {
+            session?.cancel()
+        }
     }
 
     private func statusText(for session: DrillSession) -> String {

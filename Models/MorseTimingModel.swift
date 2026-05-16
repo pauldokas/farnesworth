@@ -3,13 +3,24 @@ import Observation
 
 @Observable
 public class MorseTimingModel {
+    private var isUpdating = false
+
     public var characterSpeed: Double {
         didSet {
-            if characterSpeed.isNaN { characterSpeed = 5.0 }
-            if characterSpeed < 5.0 { characterSpeed = 5.0 }
-            if characterSpeed > 100.0 { characterSpeed = 100.0 }
-            if effectiveSpeed > characterSpeed {
-                effectiveSpeed = characterSpeed
+            guard !isUpdating else { return }
+            isUpdating = true
+            defer { isUpdating = false }
+
+            var newChar = characterSpeed
+            if newChar.isNaN { newChar = 5.0 }
+            if newChar < 5.0 { newChar = 5.0 }
+            if newChar > 100.0 { newChar = 100.0 }
+
+            if effectiveSpeed > newChar {
+                effectiveSpeed = newChar
+            }
+            if characterSpeed != newChar {
+                characterSpeed = newChar
             }
             UserDefaults.standard.set(characterSpeed, forKey: "characterSpeed")
         }
@@ -17,11 +28,20 @@ public class MorseTimingModel {
 
     public var effectiveSpeed: Double {
         didSet {
-            if effectiveSpeed.isNaN { effectiveSpeed = 5.0 }
-            if effectiveSpeed < 5.0 { effectiveSpeed = 5.0 }
-            if effectiveSpeed > 100.0 { effectiveSpeed = 100.0 }
-            if effectiveSpeed > characterSpeed {
-                characterSpeed = effectiveSpeed
+            guard !isUpdating else { return }
+            isUpdating = true
+            defer { isUpdating = false }
+
+            var newEff = effectiveSpeed
+            if newEff.isNaN { newEff = 5.0 }
+            if newEff < 5.0 { newEff = 5.0 }
+            if newEff > 100.0 { newEff = 100.0 }
+
+            if newEff > characterSpeed {
+                characterSpeed = newEff
+            }
+            if effectiveSpeed != newEff {
+                effectiveSpeed = newEff
             }
             UserDefaults.standard.set(effectiveSpeed, forKey: "effectiveSpeed")
         }
