@@ -8,6 +8,7 @@ final class DrillSessionTests: XCTestCase {
     var timingModel: MorseTimingModel!
     var audioEngine: MorseAudioEngine!
     var progressStore: ProgressStore!
+    var container: ModelContainer!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -16,7 +17,7 @@ final class DrillSessionTests: XCTestCase {
 
         let schema = Schema([UserProgress.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: UserProgress.self, configurations: modelConfiguration)
+        container = try ModelContainer(for: UserProgress.self, configurations: modelConfiguration)
         progressStore = ProgressStore(modelContext: container.mainContext)
         progressStore.updateUnlockedCount(2)
 

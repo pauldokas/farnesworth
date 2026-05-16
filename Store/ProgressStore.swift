@@ -4,8 +4,8 @@ import Observation
 
 @Model
 public final class UserProgress {
-    public var unlockedCount: Int
-    public var activeCharacters: [String]
+    public var unlockedCount: Int = 2
+    public var activeCharacters: [String] = []
 
     public init(unlockedCount: Int = 2, activeCharacters: [String]? = nil) {
         self.unlockedCount = unlockedCount
