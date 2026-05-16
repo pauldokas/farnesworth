@@ -18,18 +18,14 @@ public struct LessonProgression {
         "D": "-..", "6": "-....", "X": "-..-"
     ]
 
-    public var unlockedCount: Int
+    public var activeCharacters: [Character]
 
-    public init(unlockedCount: Int = 2) {
-        self.unlockedCount = max(2, min(unlockedCount, LessonProgression.kochSequence.count))
-    }
-
-    public var unlockedCharacters: [Character] {
-        Array(LessonProgression.kochSequence.prefix(unlockedCount))
+    public init(activeCharacters: [Character]) {
+        self.activeCharacters = activeCharacters.isEmpty ? ["K", "M"] : activeCharacters
     }
 
     public func nextChallenge() -> Challenge {
-        let character = unlockedCharacters.randomElement() ?? "K"
+        let character = activeCharacters.randomElement() ?? "K"
         let morse = LessonProgression.morseMapping[character] ?? ""
         return Challenge(text: String(character), morseCode: morse)
     }

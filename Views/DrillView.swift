@@ -8,8 +8,8 @@ struct DrillView: View {
     @State private var session: DrillSession?
 
     var body: some View {
-        VStack(spacing: 40) {
-            Spacer()
+        VStack(spacing: 20) {
+            Spacer(minLength: 8)
 
             if session?.currentState == .idle || session == nil {
                 Button(action: {
@@ -34,7 +34,7 @@ struct DrillView: View {
                 })
                 .padding(.horizontal, 32)
             } else if let session = session {
-                VStack(spacing: 24) {
+                VStack(spacing: 16) {
                     Text(statusText(for: session))
                         .font(.title3)
                         .fontWeight(.medium)
@@ -56,13 +56,13 @@ struct DrillView: View {
                             session.backspaceInput()
                         }
                     )
-                    .padding(.top, 16)
+                    .padding(.top, 8)
                     .disabled(session.currentState == .feedback)
                 }
                 .padding(.horizontal, 24)
             }
 
-            Spacer()
+            Spacer(minLength: 8)
         }
         .animation(.easeInOut, value: session?.currentState)
     }

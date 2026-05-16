@@ -4,6 +4,9 @@ public struct SettingsView: View {
     @Bindable var timingModel: MorseTimingModel
     @Bindable var audioEngine: MorseAudioEngine
 
+    @AppStorage("appAppearance") private var appAppearance: String = "System"
+    let appearanceOptions = ["System", "Light", "Dark"]
+
     public init(timingModel: MorseTimingModel, audioEngine: MorseAudioEngine) {
         self.timingModel = timingModel
         self.audioEngine = audioEngine
@@ -36,6 +39,16 @@ public struct SettingsView: View {
                 Toggle("Haptic Feedback", isOn: $audioEngine.isHapticsEnabled)
             } header: {
                 Text("Feedback")
+            }
+
+            Section {
+                Picker("Theme", selection: $appAppearance) {
+                    ForEach(appearanceOptions, id: \.self) { option in
+                        Text(option).tag(option)
+                    }
+                }
+            } header: {
+                Text("Appearance")
             }
 
             Section {

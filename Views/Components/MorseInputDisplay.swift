@@ -11,7 +11,7 @@ struct MorseInputDisplay: View {
             .minimumScaleFactor(0.4)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 32)
+            .padding(.vertical, 16)
             .padding(.horizontal, 16)
             .background(
                 RoundedRectangle(cornerRadius: 24)

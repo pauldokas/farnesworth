@@ -30,7 +30,8 @@ public final class DrillSession {
     public var isCorrect: Bool?
 
     public var unlockedCharacters: [Character] {
-        lessonProgression.unlockedCharacters
+        let count = progressStore.currentProgress?.unlockedCount ?? 2
+        return Array(LessonProgression.kochSequence.prefix(count))
     }
 
     private var lessonProgression: LessonProgression
@@ -44,7 +45,8 @@ public final class DrillSession {
 
     public init(progressStore: ProgressStore, timingModel: MorseTimingModel, audioEngine: MorseAudioEngine) {
         self.progressStore = progressStore
-        self.lessonProgression = LessonProgression(unlockedCount: progressStore.currentProgress?.unlockedCount ?? 2)
+        let activeStr = progressStore.currentProgress?.activeCharacters ?? ["K", "M"]
+        self.lessonProgression = LessonProgression(activeCharacters: activeStr.map { Character($0) })
         self.timingModel = timingModel
         self.audioEngine = audioEngine
     }
@@ -123,7 +125,8 @@ public final class DrillSession {
                 if currentCount < LessonProgression.kochSequence.count {
                     let newCount = currentCount + 1
                     progressStore.updateUnlockedCount(newCount)
-                    lessonProgression = LessonProgression(unlockedCount: newCount)
+                    let activeStr = progressStore.currentProgress?.activeCharacters ?? ["K", "M"]
+                    lessonProgression = LessonProgression(activeCharacters: activeStr.map { Character($0) })
                     recentResults.removeAll()
                 }
             }
