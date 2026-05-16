@@ -12,6 +12,27 @@ public struct SettingsView: View {
     public var body: some View {
         Form {
             Section {
+                VStack(alignment: .leading) {
+                    Text("Tone Pitch: \(Int(audioEngine.tonePitch)) Hz")
+                        .font(.headline)
+                    Slider(value: $audioEngine.tonePitch, in: 400...1000, step: 10) {
+                        Text("Tone Pitch")
+                    } minimumValueLabel: {
+                        Text("400")
+                    } maximumValueLabel: {
+                        Text("1k")
+                    }
+                    .accessibilityValue("\(Int(audioEngine.tonePitch)) hertz")
+                    .accessibilityHint("Adjusts the frequency of the Morse code tones.")
+                }
+                .padding(.vertical, 4)
+            } header: {
+                Text("Audio")
+            } footer: {
+                Text("Adjust the frequency of the Morse code tones.")
+            }
+
+            Section {
                 Toggle("Haptic Feedback", isOn: $audioEngine.isHapticsEnabled)
             } header: {
                 Text("Feedback")

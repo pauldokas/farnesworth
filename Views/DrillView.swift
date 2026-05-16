@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DrillView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(MorseTimingModel.self) private var timingModel
     @Environment(MorseAudioEngine.self) private var audioEngine
 
@@ -13,8 +14,9 @@ struct DrillView: View {
             if session?.currentState == .idle || session == nil {
                 Button(action: {
                     if session == nil {
+                        let progressStore = ProgressStore(modelContext: modelContext)
                         session = DrillSession(
-                            lessonProgression: LessonProgression(),
+                            progressStore: progressStore,
                             timingModel: timingModel,
                             audioEngine: audioEngine
                         )
@@ -40,10 +42,21 @@ struct DrillView: View {
                         .accessibilityLabel(statusAccessibilityLabel(for: session))
                         .accessibilityAddTraits(.updatesFrequently)
 
-                    MorseInputTextField(
-                        text: Bindable(session).inputBuffer,
+                    MorseInputDisplay(
+                        text: session.inputBuffer,
                         isCorrect: session.isCorrect
                     )
+
+                    TrainingKeyboard(
+                        unlockedCharacters: session.unlockedCharacters,
+                        onKeyPress: { char in
+                            session.submitInput(char)
+                        },
+                        onBackspace: {
+                            session.backspaceInput()
+                        }
+                    )
+                    .padding(.top, 16)
                     .disabled(session.currentState == .feedback)
                 }
                 .padding(.horizontal, 24)

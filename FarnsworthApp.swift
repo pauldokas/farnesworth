@@ -8,7 +8,7 @@ struct FarnsworthApp: App {
 
     var body: some Scene {
         WindowGroup {
-            DrillView()
+            MainTabView()
                 .environment(timingModel)
                 .environment(audioEngine)
         }

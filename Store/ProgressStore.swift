@@ -3,26 +3,26 @@ import SwiftData
 import Observation
 
 @Model
-final class UserProgress {
-    var unlockedCount: Int
+public final class UserProgress {
+    public var unlockedCount: Int
 
-    init(unlockedCount: Int = 2) {
+    public init(unlockedCount: Int = 2) {
         self.unlockedCount = unlockedCount
     }
 }
 
 @Observable
-final class ProgressStore {
+public final class ProgressStore {
     private var modelContext: ModelContext
 
-    var currentProgress: UserProgress?
+    public var currentProgress: UserProgress?
 
-    init(modelContext: ModelContext) {
+    public init(modelContext: ModelContext) {
         self.modelContext = modelContext
         fetchProgress()
     }
 
-    func fetchProgress() {
+    public func fetchProgress() {
         let descriptor = FetchDescriptor<UserProgress>()
         do {
             let results = try modelContext.fetch(descriptor)
@@ -38,7 +38,7 @@ final class ProgressStore {
         }
     }
 
-    func updateUnlockedCount(_ count: Int) {
+    public func updateUnlockedCount(_ count: Int) {
         if let progress = currentProgress {
             progress.unlockedCount = count
         } else {

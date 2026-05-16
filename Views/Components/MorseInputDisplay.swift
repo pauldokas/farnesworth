@@ -1,21 +1,16 @@
 import SwiftUI
 
-struct MorseInputTextField: View {
-    @Binding var text: String
+struct MorseInputDisplay: View {
+    let text: String
     var isCorrect: Bool?
 
-    @FocusState private var isFocused: Bool
-
     var body: some View {
-        TextField("Type here", text: $text)
+        Text(text.isEmpty ? " " : text)
             .font(.system(size: 80, weight: .bold, design: .monospaced))
+            .lineLimit(1)
+            .minimumScaleFactor(0.4)
             .multilineTextAlignment(.center)
-            .autocorrectionDisabled()
-#if os(iOS)
-            .textInputAutocapitalization(.never)
-            .keyboardType(.asciiCapable)
-#endif
-            .focused($isFocused)
+            .frame(maxWidth: .infinity)
             .padding(.vertical, 32)
             .padding(.horizontal, 16)
             .background(
@@ -31,9 +26,6 @@ struct MorseInputTextField: View {
                     let announcement = state ? "Correct" : "Incorrect"
                     AccessibilityNotification.Announcement(announcement).post()
                 }
-            }
-            .onAppear {
-                isFocused = true
             }
     }
 
@@ -54,12 +46,12 @@ struct MorseInputTextField: View {
 
 #Preview {
     struct PreviewWrapper: View {
-        @State private var text = ""
+        @State private var text = "K"
         @State private var state: Bool?
 
         var body: some View {
             VStack(spacing: 40) {
-                MorseInputTextField(text: $text, isCorrect: state)
+                MorseInputDisplay(text: text, isCorrect: state)
                     .padding()
 
                 HStack(spacing: 20) {

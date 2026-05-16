@@ -14,7 +14,17 @@ public final class MorseAudioEngine {
 
     public var isHapticsEnabled: Bool {
         get { hapticEngine.isEnabled }
-        set { hapticEngine.isEnabled = newValue }
+        set {
+            hapticEngine.isEnabled = newValue
+            UserDefaults.standard.set(newValue, forKey: "isHapticsEnabled")
+        }
+    }
+
+    public var tonePitch: Double = UserDefaults.standard.object(forKey: "tonePitch") as? Double ?? 600.0 {
+        didSet {
+            UserDefaults.standard.set(tonePitch, forKey: "tonePitch")
+            toneGenerator.setFrequency(tonePitch)
+        }
     }
 
     private var notificationObservers: [Any] = []
@@ -36,6 +46,12 @@ public final class MorseAudioEngine {
 
         self.toneGenerator = ToneGenerator(sampleRate: sampleRate)
         self.sourceNode = AVAudioSourceNode(renderBlock: toneGenerator.renderBlock)
+
+        if let savedHaptics = UserDefaults.standard.object(forKey: "isHapticsEnabled") as? Bool {
+            self.hapticEngine.isEnabled = savedHaptics
+        }
+
+        self.toneGenerator.setFrequency(self.tonePitch)
 
         setupEngine()
         setupNotifications()

@@ -1,6 +1,10 @@
 name: Farnsworth
 options:
   bundleIdPrefix: com.example
+packages:
+  swift-atomics:
+    url: https://github.com/apple/swift-atomics.git
+    from: 1.2.0
 targets:
   Farnsworth:
     type: application
@@ -12,6 +16,9 @@ targets:
       - path: Store
       - path: Views
       - path: FarnsworthApp.swift
+    dependencies:
+      - package: swift-atomics
+        product: Atomics
     postBuildScripts:
       - script: |
           if which swiftlint >/dev/null; then

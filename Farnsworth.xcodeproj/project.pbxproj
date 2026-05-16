@@ -7,17 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		37DE2C0DB0433EC47E6799C3 /* DrillSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17E4D03503F1812C24FA6C /* DrillSessionTests.swift */; };
+		3E1F40FB4756D5B767B08600 /* TrainingKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51DC32DE9277CBA5CFA373EA /* TrainingKeyboard.swift */; };
+		4367518811241C1560DA821E /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D432628CC01B981BE99C5B8D /* MainTabView.swift */; };
 		454B2A00F35E998E29CB88CA /* HapticEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BEE0E0D0153960E97C46D6 /* HapticEngine.swift */; };
 		632F48D41D625569598BED6C /* MorseAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708E69D77B988BCA791E97F /* MorseAudioEngine.swift */; };
 		73C8EED9EA5BEDDEB47C107C /* FarnsworthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50598C183E8189FDA80838C /* FarnsworthTests.swift */; };
 		7FFF9ECB6AB793F2278C0AE2 /* ToneGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19F20FADCD86182DB4E19DB /* ToneGenerator.swift */; };
+		81B462AB794EAC1697EFC2CD /* Atomics in Frameworks */ = {isa = PBXBuildFile; productRef = DA41BC74A441C09613F9D4EB /* Atomics */; };
 		905734C1038267DC428F1FB4 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0016D24B5FAF9A1AE9381D8 /* Challenge.swift */; };
 		92BB1CC203BF9861931DCFF2 /* DrillSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E93E4E30486F34C042AE35E /* DrillSession.swift */; };
 		9E439388988A7996C8634AB3 /* FarnsworthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB12192E8327712E7C852 /* FarnsworthApp.swift */; };
 		A8865AF122750D979BAE765B /* DrillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50EA28740C3760D6D6B73111 /* DrillView.swift */; };
 		BAB18913A192BA7BD960B05D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBEA0936A04EBA8DBD40DF4 /* SettingsView.swift */; };
 		DC6A3B31371B536D5C95ACC9 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5986C869D68A97C5C3B7470B /* ProgressStore.swift */; };
-		F14685ADE87729FBA998060E /* MorseInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C66A4FA5F78289ABA2AD1DC /* MorseInputTextField.swift */; };
+		DE1E6CAF8B45FE02E6004DF2 /* ProgressReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C1869B4BDA75AAB08429F /* ProgressReviewView.swift */; };
+		E38622A93C555C60BC7687EE /* MorseInputDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E375632AB79BB4BC4D5A68 /* MorseInputDisplay.swift */; };
 		F9DFD40C1A2D21396A82EB03 /* MorseTimingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBEB22102BE30B5009401C8 /* MorseTimingModel.swift */; };
 		FC84B35B0D36D872F3F2B49F /* LessonProgression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA2A1EBCF189247929BEA5B /* LessonProgression.swift */; };
 /* End PBXBuildFile section */
@@ -33,27 +38,43 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		17E375632AB79BB4BC4D5A68 /* MorseInputDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseInputDisplay.swift; sourceTree = "<group>"; };
 		2FA2A1EBCF189247929BEA5B /* LessonProgression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonProgression.swift; sourceTree = "<group>"; };
 		2FBEA0936A04EBA8DBD40DF4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3708E69D77B988BCA791E97F /* MorseAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseAudioEngine.swift; sourceTree = "<group>"; };
-		3C66A4FA5F78289ABA2AD1DC /* MorseInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseInputTextField.swift; sourceTree = "<group>"; };
 		3E93E4E30486F34C042AE35E /* DrillSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillSession.swift; sourceTree = "<group>"; };
 		50EA28740C3760D6D6B73111 /* DrillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillView.swift; sourceTree = "<group>"; };
+		51DC32DE9277CBA5CFA373EA /* TrainingKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingKeyboard.swift; sourceTree = "<group>"; };
 		5986C869D68A97C5C3B7470B /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
 		65BEE0E0D0153960E97C46D6 /* HapticEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticEngine.swift; sourceTree = "<group>"; };
 		688EB12192E8327712E7C852 /* FarnsworthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarnsworthApp.swift; sourceTree = "<group>"; };
 		91F8F00C9A0AEBB2EA49E2AC /* FarnsworthTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FarnsworthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A40C1869B4BDA75AAB08429F /* ProgressReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressReviewView.swift; sourceTree = "<group>"; };
 		C0016D24B5FAF9A1AE9381D8 /* Challenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		CEBEB22102BE30B5009401C8 /* MorseTimingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseTimingModel.swift; sourceTree = "<group>"; };
+		D432628CC01B981BE99C5B8D /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		E50598C183E8189FDA80838C /* FarnsworthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarnsworthTests.swift; sourceTree = "<group>"; };
+		ED17E4D03503F1812C24FA6C /* DrillSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillSessionTests.swift; sourceTree = "<group>"; };
 		F19F20FADCD86182DB4E19DB /* ToneGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToneGenerator.swift; sourceTree = "<group>"; };
 		FF2D2A2486F8EE0B17BD5EFC /* Farnsworth.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Farnsworth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		202504690D2E04C19F7C574C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81B462AB794EAC1697EFC2CD /* Atomics in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0C1469392009F31224425DED /* FarnsworthTests */ = {
 			isa = PBXGroup;
 			children = (
+				ED17E4D03503F1812C24FA6C /* DrillSessionTests.swift */,
 				E50598C183E8189FDA80838C /* FarnsworthTests.swift */,
 			);
 			name = FarnsworthTests;
@@ -104,7 +125,8 @@
 		A11C820A51524DF1473746A5 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				3C66A4FA5F78289ABA2AD1DC /* MorseInputTextField.swift */,
+				17E375632AB79BB4BC4D5A68 /* MorseInputDisplay.swift */,
+				51DC32DE9277CBA5CFA373EA /* TrainingKeyboard.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -113,6 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				50EA28740C3760D6D6B73111 /* DrillView.swift */,
+				D432628CC01B981BE99C5B8D /* MainTabView.swift */,
+				A40C1869B4BDA75AAB08429F /* ProgressReviewView.swift */,
 				2FBEA0936A04EBA8DBD40DF4 /* SettingsView.swift */,
 				A11C820A51524DF1473746A5 /* Components */,
 			);
@@ -155,6 +179,7 @@
 			buildConfigurationList = 9A200309C7B16116E0EAEE7F /* Build configuration list for PBXNativeTarget "Farnsworth" */;
 			buildPhases = (
 				CA590E2455102B2173DF18FD /* Sources */,
+				202504690D2E04C19F7C574C /* Frameworks */,
 				80CBDA48700085DF14C63E91 /* SwiftLint */,
 			);
 			buildRules = (
@@ -163,6 +188,7 @@
 			);
 			name = Farnsworth;
 			packageProductDependencies = (
+				DA41BC74A441C09613F9D4EB /* Atomics */,
 			);
 			productName = Farnsworth;
 			productReference = FF2D2A2486F8EE0B17BD5EFC /* Farnsworth.app */;
@@ -188,6 +214,9 @@
 			);
 			mainGroup = 7E475BA39EA929BD4A6E8C4A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				20049938B2E4524FCE6F89C9 /* XCRemoteSwiftPackageReference "swift-atomics" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6F365F4E69752C73CF941643 /* Products */;
 			projectDirPath = "";
@@ -225,6 +254,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37DE2C0DB0433EC47E6799C3 /* DrillSessionTests.swift in Sources */,
 				73C8EED9EA5BEDDEB47C107C /* FarnsworthTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,12 +269,15 @@
 				9E439388988A7996C8634AB3 /* FarnsworthApp.swift in Sources */,
 				454B2A00F35E998E29CB88CA /* HapticEngine.swift in Sources */,
 				FC84B35B0D36D872F3F2B49F /* LessonProgression.swift in Sources */,
+				4367518811241C1560DA821E /* MainTabView.swift in Sources */,
 				632F48D41D625569598BED6C /* MorseAudioEngine.swift in Sources */,
-				F14685ADE87729FBA998060E /* MorseInputTextField.swift in Sources */,
+				E38622A93C555C60BC7687EE /* MorseInputDisplay.swift in Sources */,
 				F9DFD40C1A2D21396A82EB03 /* MorseTimingModel.swift in Sources */,
+				DE1E6CAF8B45FE02E6004DF2 /* ProgressReviewView.swift in Sources */,
 				DC6A3B31371B536D5C95ACC9 /* ProgressStore.swift in Sources */,
 				BAB18913A192BA7BD960B05D /* SettingsView.swift in Sources */,
 				7FFF9ECB6AB793F2278C0AE2 /* ToneGenerator.swift in Sources */,
+				3E1F40FB4756D5B767B08600 /* TrainingKeyboard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,6 +514,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		20049938B2E4524FCE6F89C9 /* XCRemoteSwiftPackageReference "swift-atomics" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-atomics.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DA41BC74A441C09613F9D4EB /* Atomics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20049938B2E4524FCE6F89C9 /* XCRemoteSwiftPackageReference "swift-atomics" */;
+			productName = Atomics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8A6F533671954D607D5476A3 /* Project object */;
 }
