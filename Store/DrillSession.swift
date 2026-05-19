@@ -24,9 +24,9 @@ public final class DrillSession {
 
     public var isCorrect: Bool?
 
-    public var unlockedCharacters: [Character] {
-        let count = progressStore.currentProgress?.unlockedCount ?? 2
-        return Array(LessonProgression.kochSequence.prefix(count))
+    public var activeCharacters: [Character] {
+        let activeStr = progressStore.currentProgress?.activeCharacters ?? ["K", "M"]
+        return activeStr.map { Character($0) }
     }
 
     private var lessonProgression: LessonProgression

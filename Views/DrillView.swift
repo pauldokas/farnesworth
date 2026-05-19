@@ -8,63 +8,62 @@ struct DrillView: View {
     @State private var session: DrillSession?
 
     var body: some View {
-        VStack(spacing: 20) {
-            Spacer(minLength: 8)
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer(minLength: 8)
 
-            if session?.currentState == .idle || session == nil {
-                Button(action: {
-                    if session == nil {
-                        let progressStore = ProgressStore(modelContext: modelContext)
-                        session = DrillSession(
-                            progressStore: progressStore,
-                            timingModel: timingModel,
-                            audioEngine: audioEngine
-                        )
-                    }
-                    session?.startNextChallenge()
-                }, label: {
-                    Text("Start Drill")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.accentColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(16)
-                })
-                .padding(.horizontal, 32)
-            } else if let session = session {
-                VStack(spacing: 16) {
-                    Text(statusText(for: session))
-                        .font(.title3)
-                        .fontWeight(.medium)
-                        .foregroundColor(.secondary)
-                        .accessibilityLabel(statusAccessibilityLabel(for: session))
-                        .accessibilityAddTraits(.updatesFrequently)
-
-                    MorseInputDisplay(
-                        text: session.inputBuffer,
-                        isCorrect: session.isCorrect
-                    )
-
-                    TrainingKeyboard(
-                        activeCharacters: session.unlockedCharacters,
-                        onKeyPress: { char in
-                            session.submitInput(char)
-                        },
-                        onBackspace: {
-                            session.backspaceInput()
+                if session?.currentState == .idle || session == nil {
+                    Button(action: {
+                        if session == nil {
+                            let progressStore = ProgressStore(modelContext: modelContext)
+                            session = DrillSession(
+                                progressStore: progressStore,
+                                timingModel: timingModel,
+                                audioEngine: audioEngine
+                            )
                         }
-                    )
-                    .padding(.top, 8)
-                    .disabled(session.currentState == .feedback)
-                }
-                .padding(.horizontal, 24)
-            }
+                        session?.startNextChallenge()
+                    }, label: {
+                        Text("Start Drill")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(16)
+                    })
+                    .padding(.horizontal, 32)
+                } else if let session = session {
+                    VStack(spacing: 16) {
+                        MorseInputDisplay(
+                            text: session.inputBuffer,
+                            isCorrect: session.isCorrect
+                        )
 
-            Spacer(minLength: 8)
+                        TrainingKeyboard(
+                            activeCharacters: session.activeCharacters,
+                            onKeyPress: { char in
+                                session.submitInput(char)
+                            }
+                        )
+                        .padding(.top, 8)
+                        .disabled(session.currentState == .feedback)
+
+                        Text(statusText(for: session))
+                            .font(.title3)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+                            .accessibilityLabel(statusAccessibilityLabel(for: session))
+                            .accessibilityAddTraits(.updatesFrequently)
+                    }
+                    .padding(.horizontal, 24)
+                }
+
+                Spacer(minLength: 8)
+            }
+            .animation(.easeInOut, value: session?.currentState)
         }
-        .animation(.easeInOut, value: session?.currentState)
         .onDisappear {
             session?.cancel()
         }

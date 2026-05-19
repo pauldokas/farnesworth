@@ -73,15 +73,17 @@ final class DrillSessionTests: XCTestCase {
     }
 
     func testKeyboardUnlocking() throws {
-        XCTAssertEqual(session.unlockedCharacters, ["K", "M"])
+        XCTAssertEqual(session.activeCharacters, ["K", "M"])
 
         let schema = Schema([UserProgress.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: UserProgress.self, configurations: modelConfiguration)
         let newProgressStore = ProgressStore(modelContext: container.mainContext)
-        newProgressStore.updateUnlockedCount(5)
+        newProgressStore.toggleCharacterActive("R")
+        newProgressStore.toggleCharacterActive("S")
 
         let newSession = DrillSession(progressStore: newProgressStore, timingModel: timingModel, audioEngine: audioEngine)
-        XCTAssertEqual(newSession.unlockedCharacters, ["K", "M", "R", "S", "U"])
+        XCTAssertTrue(newSession.activeCharacters.contains("R"))
+        XCTAssertTrue(newSession.activeCharacters.contains("S"))
     }
 }

@@ -5,7 +5,6 @@ struct TrainingKeyboard: View {
     let activeCharacters: [Character]
     var disableInactive: Bool = true
     let onKeyPress: (String) -> Void
-    var onBackspace: (() -> Void)?
 
     private let rows: [[String]] = [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
@@ -33,26 +32,6 @@ struct TrainingKeyboard: View {
                     if rowIndex == 2 {
                         Spacer(minLength: 10)
                     }
-                }
-            }
-
-            HStack(spacing: 6) {
-                KeyButton(
-                    title: "Space",
-                    isActive: true,
-                    isDisabled: false,
-                    action: { onKeyPress(" ") }
-                )
-                .frame(maxWidth: .infinity)
-
-                if let onBackspace = onBackspace {
-                    KeyButton(
-                        title: "⌫",
-                        isActive: true,
-                        isDisabled: false,
-                        action: { onBackspace() }
-                    )
-                    .frame(width: 60)
                 }
             }
         }
@@ -88,6 +67,6 @@ struct KeyButton: View {
 }
 
 #Preview {
-    TrainingKeyboard(activeCharacters: ["K", "M", "R", "S", "U", "A", "P", "T", "L", "O"], onKeyPress: { _ in }, onBackspace: {})
+    TrainingKeyboard(activeCharacters: ["K", "M", "R", "S", "U", "A", "P", "T", "L", "O"], onKeyPress: { _ in })
         .padding()
 }
