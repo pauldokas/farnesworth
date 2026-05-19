@@ -11,7 +11,7 @@ struct MainTabView: View {
                 .navigationTitle("Farnsworth")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem(placement: .navigationBarLeading) {
                         Menu {
                             NavigationLink(destination: ProgressReviewView()) {
                                 Label("Progress", systemImage: "chart.bar.fill")

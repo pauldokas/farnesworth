@@ -2,9 +2,10 @@ import SwiftUI
 import UIKit
 
 struct TrainingKeyboard: View {
-    let unlockedCharacters: [Character]
+    let activeCharacters: [Character]
+    var disableInactive: Bool = true
     let onKeyPress: (String) -> Void
-    let onBackspace: () -> Void
+    var onBackspace: (() -> Void)?
 
     private let rows: [[String]] = [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
@@ -21,9 +22,11 @@ struct TrainingKeyboard: View {
                         Spacer(minLength: 10)
                     }
                     ForEach(rows[rowIndex], id: \.self) { charStr in
+                        let isActive = activeCharacters.contains(Character(charStr))
                         KeyButton(
                             title: charStr,
-                            isUnlocked: unlockedCharacters.contains(Character(charStr)),
+                            isActive: isActive,
+                            isDisabled: disableInactive && !isActive,
                             action: { onKeyPress(charStr) }
                         )
                     }
@@ -36,17 +39,21 @@ struct TrainingKeyboard: View {
             HStack(spacing: 6) {
                 KeyButton(
                     title: "Space",
-                    isUnlocked: true,
+                    isActive: true,
+                    isDisabled: false,
                     action: { onKeyPress(" ") }
                 )
                 .frame(maxWidth: .infinity)
 
-                KeyButton(
-                    title: "⌫",
-                    isUnlocked: true,
-                    action: { onBackspace() }
-                )
-                .frame(width: 60)
+                if let onBackspace = onBackspace {
+                    KeyButton(
+                        title: "⌫",
+                        isActive: true,
+                        isDisabled: false,
+                        action: { onBackspace() }
+                    )
+                    .frame(width: 60)
+                }
             }
         }
         .padding(.horizontal, 8)
@@ -55,7 +62,8 @@ struct TrainingKeyboard: View {
 
 struct KeyButton: View {
     let title: String
-    let isUnlocked: Bool
+    let isActive: Bool
+    let isDisabled: Bool
     let action: () -> Void
 
     var body: some View {
@@ -69,17 +77,17 @@ struct KeyButton: View {
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(isUnlocked ? Color.accentColor : Color.secondary.opacity(0.2))
-                .foregroundColor(isUnlocked ? .white : .secondary.opacity(0.5))
+                .background(isActive ? Color.accentColor : Color.secondary.opacity(0.2))
+                .foregroundColor(isActive ? .white : .secondary.opacity(0.5))
                 .cornerRadius(8)
         })
-        .disabled(!isUnlocked)
+        .disabled(isDisabled)
         .accessibilityLabel(title == "⌫" ? "Backspace" : title)
-        .accessibilityHint(isUnlocked ? "Tap to input" : "Locked")
+        .accessibilityHint(isActive ? "Tap to input" : (isDisabled ? "Locked" : "Tap to toggle"))
     }
 }
 
 #Preview {
-    TrainingKeyboard(unlockedCharacters: ["K", "M", "R", "S", "U", "A", "P", "T", "L", "O"], onKeyPress: { _ in }, onBackspace: {})
+    TrainingKeyboard(activeCharacters: ["K", "M", "R", "S", "U", "A", "P", "T", "L", "O"], onKeyPress: { _ in }, onBackspace: {})
         .padding()
 }

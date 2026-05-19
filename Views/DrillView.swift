@@ -48,7 +48,7 @@ struct DrillView: View {
                     )
 
                     TrainingKeyboard(
-                        unlockedCharacters: session.unlockedCharacters,
+                        activeCharacters: session.unlockedCharacters,
                         onKeyPress: { char in
                             session.submitInput(char)
                         },

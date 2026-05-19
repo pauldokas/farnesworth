@@ -13,7 +13,7 @@ public struct SettingsView: View {
     }
 
     public var body: some View {
-        Form {
+        List {
             Section {
                 VStack(alignment: .leading) {
                     Text("Tone Pitch: \(Int(audioEngine.tonePitch)) Hz")
