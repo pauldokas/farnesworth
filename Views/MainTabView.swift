@@ -6,25 +6,26 @@ struct MainTabView: View {
     @Environment(MorseAudioEngine.self) private var audioEngine
 
     var body: some View {
-        TabView {
+        NavigationStack {
             DrillView()
-                .tabItem {
-                    Label("Drill", systemImage: "play.circle.fill")
+                .navigationTitle("Farnsworth")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            NavigationLink(destination: ProgressReviewView()) {
+                                Label("Progress", systemImage: "chart.bar.fill")
+                            }
+                            NavigationLink(destination: SettingsView(timingModel: timingModel, audioEngine: audioEngine)) {
+                                Label("Settings", systemImage: "gearshape.fill")
+                            }
+                        } label: {
+                            Image(systemName: "line.3.horizontal")
+                                .imageScale(.large)
+                                .accessibilityLabel("Menu")
+                        }
+                    }
                 }
-
-            NavigationStack {
-                ProgressReviewView()
-            }
-            .tabItem {
-                Label("Progress", systemImage: "chart.bar.fill")
-            }
-
-            NavigationStack {
-                SettingsView(timingModel: timingModel, audioEngine: audioEngine)
-            }
-            .tabItem {
-                Label("Settings", systemImage: "gearshape.fill")
-            }
         }
     }
 }
