@@ -8,11 +8,10 @@ struct DrillView: View {
     @State private var session: DrillSession?
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Spacer(minLength: 8)
+        VStack(spacing: 20) {
+            Spacer(minLength: 8)
 
-                if session?.currentState == .idle || session == nil {
+            if session?.currentState == .idle || session == nil {
                     Button(action: {
                         if session == nil {
                             let progressStore = ProgressStore(modelContext: modelContext)
@@ -63,7 +62,6 @@ struct DrillView: View {
                 Spacer(minLength: 8)
             }
             .animation(.easeInOut, value: session?.currentState)
-        }
         .onDisappear {
             session?.cancel()
         }

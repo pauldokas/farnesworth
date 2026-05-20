@@ -14,9 +14,8 @@ struct ProgressReviewView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                Text("Select characters to practice in the Drill.")
+        VStack(spacing: 24) {
+            Text("Select characters to practice in the Drill.")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .padding(.top, 16)
@@ -32,8 +31,7 @@ struct ProgressReviewView: View {
                 )
                 .padding(.top, 8)
 
-                Spacer()
-            }
+            Spacer()
         }
         .navigationTitle("Progress")
     }
