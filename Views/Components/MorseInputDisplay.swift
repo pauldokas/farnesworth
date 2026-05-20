@@ -6,12 +6,12 @@ struct MorseInputDisplay: View {
 
     var body: some View {
         Text(text.isEmpty ? " " : text)
-            .font(.system(size: 80, weight: .bold, design: .monospaced))
+            .font(.system(size: 60, weight: .bold, design: .monospaced))
             .lineLimit(1)
             .minimumScaleFactor(0.4)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            .padding(.vertical, 8)
             .padding(.horizontal, 16)
             .background(
                 RoundedRectangle(cornerRadius: 24)

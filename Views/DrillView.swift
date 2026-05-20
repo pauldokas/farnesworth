@@ -48,13 +48,6 @@ struct DrillView: View {
                         )
                         .padding(.top, 8)
                         .disabled(session.currentState == .feedback)
-
-                        Text(statusText(for: session))
-                            .font(.title3)
-                            .fontWeight(.medium)
-                            .foregroundColor(.secondary)
-                            .accessibilityLabel(statusAccessibilityLabel(for: session))
-                            .accessibilityAddTraits(.updatesFrequently)
                     }
                     .padding(.horizontal, 24)
                 }
@@ -64,38 +57,6 @@ struct DrillView: View {
             .animation(.easeInOut, value: session?.currentState)
         .onDisappear {
             session?.cancel()
-        }
-    }
-
-    private func statusText(for session: DrillSession) -> String {
-        switch session.currentState {
-        case .idle:
-            return "Ready"
-        case .playingAudio:
-            return "Listen..."
-        case .awaitingInput:
-            return "Type what you heard"
-        case .feedback:
-            if let isCorrect = session.isCorrect {
-                return isCorrect ? "Correct!" : "Incorrect"
-            }
-            return "..."
-        }
-    }
-
-    private func statusAccessibilityLabel(for session: DrillSession) -> String {
-        switch session.currentState {
-        case .idle:
-            return "Ready to start"
-        case .playingAudio:
-            return "Listening to Morse code"
-        case .awaitingInput:
-            return "Awaiting your input"
-        case .feedback:
-            if let isCorrect = session.isCorrect {
-                return isCorrect ? "Correct" : "Incorrect"
-            }
-            return "Feedback"
         }
     }
 }
